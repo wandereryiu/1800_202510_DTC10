@@ -58,11 +58,12 @@ project-name/
 ---
 
 ## Contributors
-- My name is Yi, Fun Fact: loves playing rubgy
+
+Hi, we are Koko and Yi.
 
 - **Teammate Name** - BCIT CST Student, Frontend enthusiast with a knack for creative design. Fun fact: Has a collection of over 50 houseplants.
 
-Hi, my name is Yi.
+
 
 ---
 
