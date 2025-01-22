@@ -62,6 +62,8 @@ project-name/
 - **Teammate Name** - BCIT CST Student, Frontend enthusiast with a knack for creative design. Fun fact: Has a collection of over 50 houseplants.
 My name is Koko, Fun Fact: loves playing rubgy
 
+Hi, my name is Yi.
+
 ---
 
 ## Acknowledgments
