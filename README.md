@@ -63,7 +63,7 @@ Hi, I am Koko
 
 Hi, I am Yi
 
-Hi, I am Brandon
+Hi, I am Brandon.
 
 - **Teammate Name** - BCIT CST Student, Frontend enthusiast with a knack for creative design. Fun fact: Has a collection of over 50 houseplants.
 
