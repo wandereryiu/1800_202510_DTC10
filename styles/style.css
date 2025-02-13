@@ -9,9 +9,15 @@ body {
 }
 
 .SimplSaving {
+    pointer-events: none;
+    text-align: left;
+    padding-left: 15px;
+    font-family: "Brush Script MT", monospace;
+    font-size: 30px;
+    font-weight: 500;
     color: #005a00;
-    font-weight: bold;
 }
+
 
 .navbar {
     background-color: #bfffbf;
