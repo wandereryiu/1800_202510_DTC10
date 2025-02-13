@@ -1,1 +1,27 @@
+@media only screen and (max-width: 600px) {
+    body {
+        background-color: lightblue;
+    }
+}
 
+body {
+    font-family: system-ui, sans-serif;
+}
+
+.SimplSaving {
+    color: #005a00;
+    font-weight: bold;
+}
+
+.navbar {
+    background-color: #bfffbf;
+    color: #005a00;
+}
+
+.navbar .nav-link {
+    color: #005a00;
+}
+
+.navbar .nav-link:hover {
+    color: #008000;
+}
