@@ -60,7 +60,9 @@ project-name/
 ## Contributors
 
 **Yi Yu Zhao**
+
 **Koko Onuwavbagbe**
+
 **Brandon Berge**
 
 ---
