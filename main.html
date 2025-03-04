@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimplSaving</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Delius+Swash+Caps&family=Emilys+Candy&family=Mea+Culpa&family=Mystery+Quest&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles/style.css" />
+</head>
+
+<body class="bg-white">
+
+    <!-- Navbar -->
+    <nav class="navbar flex items-center justify-between px-8 py-4 border-b">
+        <div class=" text-left flex items-center space-x-4 text-m">
+            <img src="images/logo.jpeg" class="h-12" alt="SimplSaving" />
+            <a href="#" class="hover:underline">Contact</a>
+            <a href="#" class="hover:underline">Home</a>
+        </div>
+        <div class="SimplSaving text-4xl font-bold text-center">SimplSaving</div>
+        <div class="flex items-center space-x-4">
+            <!-- <a href="#" class="hover:underline">🔍</a>
+            <a href="#" class="hover:underline">👤</a> -->
+            <button class="bg-[#008000] text-white px-4 py-2 rounded-md hover:bg-[#2fa72f] transition">
+                Logout
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Navigation -->
+    <div class="bg-[#005a00] text-white text-center py-3">
+        <div class="flex justify-center space-x-8 text-sm">
+            <a href="#" class="hover:underline">Bills</a>
+            <a href="#" class="hover:underline">Debts & Loans</a>
+            <a href="#" class="hover:underline">Insights</a>
+            <a href="#" class="hover:underline">About Us</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="flex flex-col md:flex-row items-center">
+        <!-- Left Image Section -->
+        <div class="w-full md:w-1/2">
+            <img src="images/saving.png" alt="Splash Image" class="w-full">
+        </div>
+        <!-- Right Promo Section -->
+        <div class="w-full md:w-1/2 p-8 text-center md:text-left">
+            <h1 class="text-5xl font-extrabold"><br><span class="text-[#005a00]">SimplSaving</span></h1>
+            <p class="text-[#005a00] mt-4 text-m">Helping you save smarter, every step of the way.</p>
+            <button class="mt-6 bg-[#008000] text-white px-6 py-3 rounded-md hover:bg-[#2fa72f]">Track Spending</button>
+        </div>
+    </div>
+
+</body>
+</html>
