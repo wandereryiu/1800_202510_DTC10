@@ -1,0 +1,82 @@
+.SimplSaving {
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    text-align: left;
+    font-family: "Brush Script MT", monospace;
+    font-size: 70px;
+    font-weight: 500;
+    color: #005a00;
+    padding: 0;
+    margin: 10px;
+}
+
+.SimplSaving img {
+    margin-right: 10px;
+    /* Keeps space between image and text */
+    margin-left: 0;
+    /* Ensures image starts from the edge */
+}
+
+.navbar .container {
+    display: flex;
+
+    padding-left: 0;
+    /* Removes any extra padding */
+}
+
+.navbar {
+    background-color: #bfffbf;
+    color: #005a00;
+    
+}
+
+
+.navbar .nav-link {
+    color: #005a00;
+    align-items: center;
+    padding-left: 10px;
+}
+
+.navbar .nav-link:hover {
+    color: #008000;
+}
+
+.Welcome {
+    background-color: #FFFFFF;
+    color: #005a00;
+    font-family: "Emilys Candy", serif;
+    font-weight: bolder;
+    font-style: normal;
+
+}
+
+.display-5 {
+    font-size: 50px;
+    ;
+}
+
+.text-lg {
+    font-family: "Delius Swash Caps", serif;
+    font-weight: bold;
+
+    font-style: normal;
+
+}
+
+
+.call {
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+    font-size: 16px;
+    color: #ffffff;
+    background-color: #008000;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+}
+
+.call:hover {
+    color: #ffffff;
+    background-color: #005a00;
+}
