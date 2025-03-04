@@ -3,147 +3,72 @@
 
 <head>
     <title>SimplSaving</title>
-    <meta name="comp1800 template" content="My 1800 App" />
+    <meta name="desciption" content="Financial tracking for students and graduated students who need help saving.">
 
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
-        </script>
+    <!-- Other libraries go here -->
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
-        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Delius+Swash+Caps&family=Emilys+Candy&family=Mea+Culpa&family=Mystery+Quest&display=swap"
-        rel="stylesheet">
+    <link rel="stylesheet" href="./styles/style.css">
 
-    <link rel="stylesheet" href="./styles/style.css" />
-
-    <style>
-        /* Ensure footer stays at the bottom */
-        html,
-        body {
-            height: 100%;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-        }
-
-        main {
-            flex: 1;
-            /* Pushes the footer down */
-        }
-
-        footer {
-            flex-shrink: 0;
-            /* Prevents footer from shrinking */
-        }
-    </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
-        <div class="container-fluid">
-            <a class="SimplSaving" href="#">
-                <img src="./images/logo.jpeg" height="80" alt="SimplSaving Logo">
-                SimplSaving
+
+    <!--Navigation Bar-->
+    <nav class="border-gray-200">
+        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+            <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
+                <img src="images/logo.jpeg" class="h-8" alt="SimplSaving" />
+                <span class="self-center text-2xl font-semibold text-[#005a00]">SimplSaving</span>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarNav" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+            <button data-collapse-toggle="navbar-solid-bg" type="button"
+                class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-[#005a00] rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-[#005a00]"
+                aria-controls="navbar-solid-bg" aria-expanded="false">
+                <span class="sr-only">Open main menu</span>
+                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 17 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M1 1h15M1 7h15M1 13h15" />
+                </svg>
             </button>
-
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+            <div class="hidden w-full md:block md:w-auto" id="navbar-solid-bg">
+                <ul
+                    class="flex flex-col font-medium mt-4 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-transparent dark:bg-gray-800 md:dark:bg-transparent dark:border-gray-700">
+                    <li>
+                        <a href="#" class="block py-2 px-3 md:p-0 text-[#005a00]" aria-current="page">Home</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
+                    <li>
+                        <a href="#" class="block py-2 px-3 md:p-0 text-[#005a00]">Spending
+                            Insights</a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            Dropdown
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="#">Something else here</a>
-                            </li>
-                        </ul>
+                    <li>
+                        <a href="#" class="block py-2 px-3 md:p-0 text-[#005a00]">Chat</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+                    <li>
+                        <a href="#" class="block py-2 px-3 md:p-0 text-[#005a00]">Contact</a>
                     </li>
                 </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                    <button class="btn btn-outline-success" type="submit">
-                        Search
-                    </button>
-                </form>
             </div>
         </div>
     </nav>
 
-    <!------------------------------>
-    <!-- Your HTML Layout go here -->
-    <!------------------------------>
-    <!----welcome banner-->
-    <div class="Welcome">
-        <div class="p-5 mb-4 rounded-3">
-            <div class="container-fluid py-5">
-                <h1 class="display-5 fw-bold">Welcome to SimplSaving</h1>
-                <p class="col-md-8 fs-4">Helping you save smarter, every step of the way.</p>
+    <!-- Welcome Banner -->
 
-            </div>
-        </div>
-    </div>
-    <!-- Stuff for body goes here -->
+    <!-- Call to Action -->
+
+    <!-- Footer -->
 
     <!---------------------------------------------->
     <!-- Your own JavaScript functions go here    -->
     <!---------------------------------------------->
 
-    <div class="updtspndbtn">
-        <button type="button" class="btn btn-small">Update Spending</button>
-    </div>
-
     <!-- Link to scripts of your own -->
     <!-- <script src="./scripts/script.js"></script> -->
 
-    <!-- Footer -->
-    <footer id="footer" class="bg-dark text-white py-4 mt-auto">
-        <div id="footerdiv" class="container text-center">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5>SimplSaving</h5>
-                    <p>
-                        <em>Helping you save smarter, every step of the way. </em> Insert
-                        agreed upon slogan here
-                    </p>
-                </div>
-                <div class="col-md-6">
-                    <h5>Link to map of site</h5>
-                    <a href="#" class="text-white mx-2">Text/Icon</a>
-                    <a href="#" class="text-white mx-2">Text/Icon</a>
-                    <a href="#" class="text-white mx-2">Text/Icon</a>
-                </div>
-            </div>
-            <hr class="bg-light" />
-            <p class="mb-0">&copy; 2025 SimplSaving. All Rights Reserved.</p>
-        </div>
-    </footer>
 </body>
 
 </html>
