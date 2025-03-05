@@ -1,46 +1,11 @@
-.SimplSaving {
-    pointer-events: none;
-    display: flex;
-    align-items: center;
-    text-align: left;
-    font-family: "Brush Script MT", monospace;
-    font-size: 70px;
-    font-weight: 500;
-    color: #005a00;
-    padding: 0;
-    margin: 10px;
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+IT+Moderna:wght@100..400&display=swap');
+
+@import "tailwindcss";
+
+nav span {
+    font-family: 'Playwrite IT Moderna', cursive;
 }
 
-.SimplSaving img {
-    margin-right: 10px;
-    /* Keeps space between image and text */
-    margin-left: 0;
-    /* Ensures image starts from the edge */
-}
-
-.navbar .container {
-    display: flex;
-
-    padding-left: 0;
-    /* Removes any extra padding */
-}
-
-.navbar {
-    background-color: #bfffbf;
-    color: #005a00;
-    
-}
-
-
-.navbar .nav-link {
-    color: #005a00;
-    align-items: center;
-    padding-left: 10px;
-}
-
-.navbar .nav-link:hover {
-    color: #008000;
-}
 
 .Welcome {
     background-color: #FFFFFF;
@@ -55,7 +20,8 @@
     font-size: 50px;
     ;
 }
-.text-5xl{
+
+.text-5xl {
     font-family: "Emilys Candy", serif;
 
 }
