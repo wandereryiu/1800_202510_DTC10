@@ -1,0 +1,1 @@
+import "@fontsource/playwrite-it-moderna";

@@ -1,5 +1,8 @@
+<!-- What the user sees after logging in -->
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,26 +10,49 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Delius+Swash+Caps&family=Emilys+Candy&family=Mea+Culpa&family=Mystery+Quest&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Delius+Swash+Caps&family=Emilys+Candy&family=Mea+Culpa&family=Mystery+Quest&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="./styles/style.css" />
 </head>
 
-<body class="bg-white">
+<body class="bg-white flex flex-col min-h-screen">
 
-    <!-- Navbar -->
-    <nav class="navbar flex items-center justify-between px-8 py-4 border-b">
-        <div class=" text-left flex items-center space-x-4 text-m">
-            <img src="images/logo.jpeg" class="h-12" alt="SimplSaving" />
-            <a href="#" class="hover:underline">Contact</a>
-            <a href="#" class="hover:underline">Home</a>
-        </div>
-        <div class="SimplSaving text-4xl font-bold text-center">SimplSaving</div>
-        <div class="flex items-center space-x-4">
-            <!-- <a href="#" class="hover:underline">🔍</a>
-            <a href="#" class="hover:underline">👤</a> -->
-            <button class="bg-[#008000] text-white px-4 py-2 rounded-md hover:bg-[#2fa72f] transition">
-                Logout
+    <!--Navigation Bar-->
+    <nav class="bg-[#b5e3b3] border-gray-200">
+        <div class="max-w-screen-xl flex flex-wrap items-center justify-between p-4">
+            <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
+                <span class="ml-8 text-2xl font-['Playwrite IT Moderna'] font-bold text-[#005a00]">SimplSaving</span>
+            </a>
+            <button data-collapse-toggle="navbar-solid-bg" type="button"
+                class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-[#005a00] rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-[#005a00]"
+                aria-controls="navbar-solid-bg" aria-expanded="false">
+                <span class="sr-only">Open main menu</span>
+                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 17 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M1 1h15M1 7h15M1 13h15" />
+                </svg>
             </button>
+            <div class="hidden w-full md:block md:w-auto" id="navbar-solid-bg">
+                <ul
+                    class="flex flex-col font-medium mt-4 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-transparent dark:bg-gray-800 md:dark:bg-transparent dark:border-gray-700">
+                    <li>
+                        <a href="#" class="block py-2 px-3 md:p-0 text-[#005a00]" aria-current="page">Home</a>
+                    </li>
+                    <li>
+                        <a href="#" class="block py-2 px-3 md:p-0 text-[#005a00]">Spending
+                            Insights</a>
+                    </li>
+                    <li>
+                        <a href="#" class="block py-2 px-3 md:p-0 text-[#005a00]">Chat</a>
+                    </li>
+                    <li>
+                        <a href="#" class="block py-2 px-3 md:p-0 text-[#005a00]">Contact</a>
+                    </li>
+                </ul>
+            </div>
+
         </div>
     </nav>
 
@@ -86,4 +112,5 @@
             </div>
         </footer>
 </body>
+
 </html>

@@ -1,3 +1,5 @@
+<!-- First page that user sees -->
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,21 +13,28 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Other libraries go here -->
+
+    <!-- Custom Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Delius+Swash+Caps&family=Emilys+Candy&family=Mea+Culpa&family=Mystery+Quest&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./styles/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Playwrite+IT+Moderna:wght@100..400&display=swap"
+        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Delius+Swash+Caps&family=Emilys+Candy&family=Mea+Culpa&family=Mystery+Quest&display=swap"
+        rel="stylesheet">
 
+    <link rel="stylesheet" href="./styles/style.css" />
 </head>
 
 <body class="flex flex-col min-h-screen">
 
     <!--Navigation Bar-->
-    <nav class="navbar">
-        <div class="max-w-screen-xl flex flex-wrap text-left items-center justify-between mx-auto p-4">
-            <a href="#" class=" flex items-center space-x-3 rtl:space-x-reverse">
-                <img src="images/logo.jpeg" class="h-12" alt="SimplSaving" />
-                <span class="SimplSaving self-center text-2xl font-semibold text-[#005a00]">SimplSaving</span>
+    <nav class="bg-[#b5e3b3] border-gray-200">
+        <div class="max-w-screen-xl flex flex-wrap items-center justify-between p-4">
+            <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
+                <span class="ml-8 text-2xl font-['Playwrite IT Moderna'] font-bold text-[#005a00]">SimplSaving</span>
             </a>
             <button data-collapse-toggle="navbar-solid-bg" type="button"
                 class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-[#005a00] rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-[#005a00]"
@@ -41,22 +50,29 @@
                 <ul
                     class="flex flex-col font-medium mt-4 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-transparent dark:bg-gray-800 md:dark:bg-transparent dark:border-gray-700">
                     <li>
-                        <a href="#" class="block py-2 px-3 md:p-0 text-[#005a00] nav-link" aria-current="page">Home</a>
+                        <a href="#" class="block py-2 px-3 md:p-0 text-[#005a00]" aria-current="page">Home</a>
                     </li>
                     <li>
-                        <a href="#" class="block py-2 px-3 md:p-0 text-[#005a00] nav-link">Spending
+                        <a href="#" class="block py-2 px-3 md:p-0 text-[#005a00]">Spending
                             Insights</a>
                     </li>
                     <li>
-                        <a href="#" class="block py-2 px-3 md:p-0 text-[#005a00] nav-link">Chat</a>
+                        <a href="#" class="block py-2 px-3 md:p-0 text-[#005a00]">Chat</a>
                     </li>
                     <li>
-                        <a href="#" class="block py-2 px-3 md:p-0 text-[#005a00] nav-link">Contact</a>
+                        <a href="#" class="block py-2 px-3 md:p-0 text-[#005a00]">Contact</a>
                     </li>
                 </ul>
             </div>
+
+            <div class="justify-end flex-row hidden lg:flex">
+                <a href="#"
+                    class="px-4 py-2 h-min rounded-full border-1 border-white bg-[#005a00] text-white">Login/Sign Up</a>
+            </div>
+
         </div>
     </nav>
+
 
     <!-- Welcome Banner -->
     <div class="Welcome">
@@ -92,7 +108,8 @@
     <!---------------------------------------------->
 
     <!-- Link to scripts of your own -->
-    <!-- <script src="./scripts/script.js"></script> -->
+    <script src="./scripts/script.js"></script>
+    <script src="./scripts/skeleton.js"></script>
 
 </body>
 
