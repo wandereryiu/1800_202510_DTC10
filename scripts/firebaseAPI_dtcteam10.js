@@ -1,10 +1,10 @@
 var firebaseConfig = {
-    apiKey: "AIzaSyDCdDfFiMvz767-VoIpDefZLjAjCkYHyqg",
-    authDomain: "simplsaving-dtc10.firebaseapp.com",
-    projectId: "simplsaving-dtc10",
-    storageBucket: "simplsaving-dtc10.firebasestorage.app",
-    messagingSenderId: "472977879890",
-    appId: "1:472977879890:web:27715620995b0637e7c08b",
+    apiKey: "AIzaSyCEoKBCyOnoCYJ9duyRBARqlsmJ7jjCK_E",
+    authDomain: "comp1800---term-project-3624d.firebaseapp.com",
+    projectId: "comp1800---term-project-3624d",
+    storageBucket: "comp1800---term-project-3624d.firebasestorage.app",
+    messagingSenderId: "1061871897541",
+    appId: "1:1061871897541:web:e00119fce99e7c8749d9ac"
 };
 
 // Initialize Firebase
