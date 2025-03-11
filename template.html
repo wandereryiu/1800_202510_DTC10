@@ -1,116 +1,54 @@
+<!-- Template -->
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <title>SimplSaving</title>
-    <meta name="desciption" content="Financial tracking for students and graduated students who need help saving.">
+    <meta name="Desciption" content="Financial tracking for students and graduated students who need help saving.">
 
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Other libraries go here -->
+    <!-- Firebase Libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
     <!-- Custom Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playwrite+IT+Moderna:wght@100..400&display=swap"
         rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Delius+Swash+Caps&family=Emilys+Candy&family=Mea+Culpa&family=Mystery+Quest&display=swap"
-        rel="stylesheet">
-
     <link rel="stylesheet" href="./styles/style.css" />
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playwrite+IT+Moderna:wght@100..400&display=swap');
+    </style>
+
 </head>
 
 <body class="flex flex-col min-h-screen">
 
     <!--Navigation Bar-->
-    <nav class="bg-[#b5e3b3] border-gray-200">
-        <div class="flex flex-row items-center justify-between p-4">
+    <nav id="navbarPlaceholder"></nav>
 
-            <div class="flex-row grow-1 md:flex text-[#005a00]">
-                <a class="hidden w-full md:block md:w-auto">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" width="48" height="48"
-                        stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor">
-                        <path d="M15 11v.01"></path>
-                        <path d="M5.173 8.378a3 3 0 1 1 4.656 -1.377"></path>
-                        <path
-                            d="M16 4v3.803a6.019 6.019 0 0 1 2.658 3.197h1.341a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-1.342c-.336 .95 -.907 1.8 -1.658 2.473v2.027a1.5 1.5 0 0 1 -3 0v-.583a6.04 6.04 0 0 1 -1 .083h-4a6.04 6.04 0 0 1 -1 -.083v.583a1.5 1.5 0 0 1 -3 0v-2l0 -.027a6 6 0 0 1 4 -10.473h2.5l4.5 -3h0z">
-                        </path>
-                    </svg>
-                </a>
-                <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
-                    <span class=" text-2xl font-['Playwrite IT Moderna'] font-bold text-[#005a00]">SimplSaving</span>
-                </a>
-            </div>
-
-            <button data-collapse-toggle="navbar-solid-bg" type="button"
-                class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-[#005a00] rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-[#005a00]"
-                aria-controls="navbar-solid-bg" aria-expanded="false">
-                <span class="sr-only">Open main menu</span>
-                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                    viewBox="0 0 17 14">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M1 1h15M1 7h15M1 13h15" />
-                </svg>
-            </button>
-            <div class="ml-16 hidden w-full md:block md:w-auto">
-                <ul
-                    class="flex flex-col font-medium  rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-transparent">
-                    <li>
-                        <a href="#"
-                            class="block py-2 px-3 md:p-0 transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 text-[#005a00]"
-                            aria-current="page">Home</a>
-                    </li>
-                    <li>
-                        <a href="#"
-                            class="block py-2 px-3 md:p-0 transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 text-[#005a00]">Chat</a>
-                    </li>
-                    <li>
-                        <a href="#"
-                            class="block py-2 px-3 md:p-0 transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 text-[#005a00]">Contact</a>
-                    </li>
-                    <li>
-                        <a href="#"
-                            class="px-4 py-2 h-min rounded-full border-1 border-white bg-[#005a00] hover:bg-[#169416] text-white">Login/Sign
-                            Up</a>
-                    </li>
-                </ul>
-
-            </div>
-        </div>
-    </nav>
-
-
-
-
-    <!-- Welcome Banner -->
-    <!-- <div class="Welcome">
-        <div class="p-5 mb-4 rounded-lg bg-white">
-            <div class="container mx-auto py-5">
-                <h1 class="text-5xl font-bold mt-4">Welcome to SimplSaving</h1>
-                <p class="max-w-lg text-lg mt-4">Helping you save smarter, every step of the way.</p>
-            </div>
-        </div>
-    </div> -->
-    <!-- call to action -->
-
-    <!-- <main class="flex-1 container mx-auto p-6 text-center">
-        <button class=" call bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Update Spending</button>
-    </main> -->
+    <!-- Body -->
 
     <!-- Footer -->
+    <nav id="footerPlaceholder"></nav>
 
-    <!---------------------------------------------->
-    <!-- Your own JavaScript functions go here    -->
-    <!---------------------------------------------->
-
-    <!-- Link to scripts of your own -->
-    <!-- <script src="./scripts/script.js"></script> -->
+    <!-- JS functions -->
+    <script src="./scripts/authentication.js"></script>
+    <script src="./scripts/firebaseAPI_dtcteam10.js"></script>
+    <script src="./scripts/skeleton.js"></script>
+    <script src="./scripts/script.js"></script>
 
 </body>
 

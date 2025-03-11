@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-function loadSkeleton() {
-
-    firebase.auth().onAuthStateChanged(function (user) {
-        if (user) {
-            // If the "user" variable is not null, then someone is logged in
-=======
 //---------------------------------------------------
 // This function loads the parts of your skeleton 
 // (navbar, footer, and other things) into html doc. 
@@ -12,11 +5,10 @@ function loadSkeleton() {
 function loadSkeleton() {
 
     firebase.auth().onAuthStateChanged(function (user) {
-        if (user) {                   
-		        // If the "user" variable is not null, then someone is logged in
->>>>>>> 0c1b6b89547985c2d48f9e262aa61130c02c14c3
+        if (user) {
+            // If the "user" variable is not null, then someone is logged in
             // User is signed in.
-            // Do something for the user here.
+
             console.log($('#navbarPlaceholder').load('./text/nav_after_login.html'));
             console.log($('#footerPlaceholder').load('./text/footer.html'));
         } else {

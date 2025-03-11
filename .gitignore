@@ -2,3 +2,4 @@
 *.logs
 node_modules/
 .vscode/
+firebaseAPI_dtcteam10.js
