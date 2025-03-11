@@ -1,5 +1,4 @@
-<!-- What user sees AFTER clicking 'Login' -->
-<!-- This is the 'Login/Sign Up' page-->
+<!-- Template -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -46,34 +45,52 @@
             <a href="#" class="hover:underline">Spending</a>
             <a href="#" class="hover:underline">Savings</a>
             <a href="#" class="hover:underline">Payments</a>
-            <a href="student_loans.html" class="hover:underline">Student Loans</a>
+            <a href="#" class="hover:underline">Student Loans</a>
         </div>
     </div>
 
-    <!-- Hero Section -->
-    <div class="flex flex-col md:flex-row items-center">
-        <!-- Left Image Section -->
-        <div class="w-full md:w-1/2">
-            <img src="images/saving.png" alt="Splash Image" class="w-full">
-        </div>
-        <!-- Right Promo Section -->
-        <div class="w-full md:w-1/2 p-8 text-center md:text-left">
-            <h1 class="text-5xl font-extrabold"><br><span class="text-[#005a00]">SimplSaving</span></h1>
-            <p class="text-[#005a00] mt-4 text-m">Helping you save smarter, every step of the way.</p>
-            <button class="mt-6 bg-[#008000] text-white px-6 py-3 rounded-md hover:bg-[#2fa72f]">Track Spending</button>
+    <!-- Body -->
+    <div class="container mx-auto p-4 max-w-md">
+        <h1 class="max-w text-3xl font-bold text-center text-[#005a00] mb-6">Student Loan Calculator</h1>
+        <form id="loanForm" class="bg-white p-6 rounded-lg shadow-md">
+            <div class="mb-4">
+                <label for="loanAmount" class="block text-sm font-medium text-gray-700">Loan Amount ($):</label>
+                <input type="number" id="loanAmount"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#005a00]"
+                    required>
+            </div>
+            <div class="mb-4">
+                <label for="interestRate" class="block text-sm font-medium text-gray-700">Annual Interest Rate
+                    (%):</label>
+                <input type="number" step="0.01" id="interestRate"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#005a00]"
+                    required>
+            </div>
+            <div class="mb-4">
+                <label for="monthlyPayment" class="block text-sm font-medium text-gray-700">Monthly Payment ($):</label>
+                <input type="number" id="monthlyPayment"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#005a00]"
+                    required>
+            </div>
+            <button type="submit"
+                class="w-full bg-[#005a00] text-white py-2 px-4 rounded-md hover:bg-[#169416] focus:outline-none focus:ring-2 focus:ring-[#005a00]">
+                Calculate Payoff Time
+            </button>
+        </form>
+
+        <div id="result" class="mt-6 p-4 bg-white rounded-lg shadow-md text-center text-lg font-semibold text-gray-700">
         </div>
     </div>
 
 
     <!-- Footer -->
-    <nav id="footerPlaceholder"></nav>
+    <!-- <nav id="footerPlaceholder"></nav> -->
 
     <!-- JS functions -->
+    <script src="./scripts/authentication.js"></script>
     <script src="./scripts/firebaseAPI_dtcteam10.js"></script>
     <script src="./scripts/skeleton.js"></script>
     <script src="./scripts/script.js"></script>
-    <script src="./scripts/authentication.js"></script>
-
 
 </body>
 
