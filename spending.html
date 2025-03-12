@@ -1,0 +1,117 @@
+<!-- Template -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>SimplSaving</title>
+        <meta name="Desciption" content="Financial tracking for students and graduated students who need help saving.">
+
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://cdn.tailwindcss.com"></script>
+
+        <!-- Firebase Libraries -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script>
+        <link type="text/css" rel="stylesheet"
+            href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+
+
+        <!-- Custom Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Playwrite+IT+Moderna:wght@100..400&display=swap"
+            rel="stylesheet">
+        <link rel="stylesheet" href="./styles/style.css" />
+
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Playwrite+IT+Moderna:wght@100..400&display=swap');
+        </style>
+
+    </head>
+
+    <body class="flex flex-col min-h-screen">
+
+        <!--Navigation Bar-->
+        <nav id="navbarPlaceholder"></nav>
+
+        <!-- Financial Tracking Navbar -->
+        <div class="bg-[#005a00] text-white text-center py-3">
+            <div class="flex justify-center space-x-8 text-sm">
+                <a href="#" class="hover:underline">Spending</a>
+                <a href="#" class="hover:underline">Savings</a>
+                <a href="#" class="hover:underline">Payments</a>
+                <a href="#" class="hover:underline">Student Loans</a>
+            </div>
+        </div>
+
+        <!-- Form Section -->
+        <div class="container mx-auto p-4">
+            <h2 class="text-2xl font-bold mb-4">Add New Expense</h2>
+            <form id="expenseForm" class="max-w-md">
+                <div class="mb-4">
+                    <label for="expenseAmount" class="block text-sm font-medium text-gray-700">Amount ($):</label>
+                    <input type="number" id="expenseAmount" step="0.01" min="0" placeholder="0.00"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#005a00]"
+                        required>
+                </div>
+                <div class="mb-4">
+                    <label for="expenseCategory" class="block text-sm font-medium text-gray-700">Category:</label>
+                    <select id="expenseCategory"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#005a00]"
+                        required>
+                        <option value="">Select a category</option>
+                        <option value="food">Food</option>
+                        <option value="transportation">Transportation</option>
+                        <option value="entertainment">Entertainment</option>
+                        <option value="utilities">Utilities</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="expenseDescription" class="block text-sm font-medium text-gray-700">Description:</label>
+                    <input type="text" id="expenseDescription"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#005a00]"
+                        required>
+                </div>
+                <button type="submit"
+                    class="w-full bg-[#005a00] text-white py-2 px-4 rounded-md hover:bg-[#169416] focus:outline-none focus:ring-2 focus:ring-[#005a00]">
+                    Add Expense
+                </button>
+            </form>
+
+            <!-- Monthly Summary Section -->
+            <div class="mt-8">
+                <h2 class="text-2xl font-bold mb-4">Monthly Summary</h2>
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <p id="monthlyTotal" class="text-xl font-bold text-[#005a00]">Total: $0.00</p>
+                </div>
+            </div>
+
+            <!-- Recent Expenses Section -->
+            <div class="mt-8">
+                <h2 class="text-2xl font-bold mb-4">Recent Expenses</h2>
+                <div id="expensesList" class="space-y-3">
+                    <!-- Expenses will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <nav id="footerPlaceholder"></nav>
+
+        <!-- JS functions -->
+        <script src="./scripts/authentication.js"></script>
+        <script src="./scripts/firebaseAPI_dtcteam10.js"></script>
+        <script src="./scripts/skeleton.js"></script>
+        <script src="./scripts/script.js"></script>
+        <script src="./scripts/spending.js"></script>
+    </body>
+
+</html>
