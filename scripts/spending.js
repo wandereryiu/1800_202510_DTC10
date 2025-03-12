@@ -48,7 +48,6 @@ expenseForm.addEventListener('submit', async function (e) {
 
         // Clear form
         expenseForm.reset();
-        alert('Expense added successfully!');
         loadExpenses(); // Refresh the expenses list
 
     } catch (error) {
