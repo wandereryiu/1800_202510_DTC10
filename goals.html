@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>SimplSaving</title>
+    <meta name="Description" content="Financial tracking for students and graduated students who need help saving.">
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
+
+    <!-- Firebase Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+
+    <!-- Custom Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playwrite+IT+Moderna:wght@100..400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="./styles/style.css" />
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playwrite+IT+Moderna:wght@100..400&display=swap');
+    </style>
+</head>
+
+<body class="flex flex-col min-h-screen">
+    <!--Navigation Bar-->
+    <nav id="navbarPlaceholder"></nav>
+    <!-- Financial Tracking Navbar -->
+    <div class="bg-[#005a00] text-white text-center py-3">
+        <div class="flex justify-center space-x-8 text-sm">
+            <a href="#" class="hover:underline">Spending</a>
+            <a href="#" class="hover:underline">Savings</a>
+            <a href="#" class="hover:underline">Payments</a>
+            <a href="#" class="hover:underline">Student Loans</a>
+        </div>
+    </div>
+
+
+    <!-- Main Content -->
+
+    <div class="flex-grow flex items-start justify-start p-4">
+        <div class="container max-w-md">
+            <h1 class="text-3xl font-bold text-[#005a00] mb-6">Saving Goals</h1>
+            <form class="max-w-sm">
+                <div class="mb-5">
+                    <label for="large-input" class="block mb-2 text-m font-medium text-gray-900 dark:text-[#005a00]">
+                        Category of Savings
+                    </label>
+                    <input type="text" id="large-input"
+                        class="block w-full p-4 text-[#005a00] border border-[#005a00] rounded-lg bg-gray-50 text-base focus:ring-[#005a00] focus:border-[#005a00] dark:bg-white dark:border-[#005a00] dark:placeholder-gray-400 dark:text-[#005a00] dark:focus:ring-[#005a00] dark:focus:border-[#005a00]">
+                </div>
+                <div class="mb-5">
+                    <label for="expenseAmount" class="block mb-2 text-m font-medium text-gray-900 dark:text-[#005a00]">
+                        Input a Saving Goal$
+                    </label>
+                    <input type="number" id="expenseAmount" step="0.01" min="0" placeholder="0.00"
+                        class="mt-1 block w-full px-3 py-2 border border-[#005a00] rounded-md shadow-m focus:outline-none focus:ring-2 focus:ring-[#66e766]"
+                        required>
+                </div>
+
+                <label class="block mb-2 text-lg font-medium text-gray-900 dark:text-[#005a00]">
+                    Input Start Date and End Date
+                </label>
+
+                <div id="date-range-picker" date-rangepicker class="flex items-center">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                            </svg>
+                        </div>
+                        <input id="datepicker-range-start" name="start" type="text"
+                            class="bg-white border border-[#005a00] text-[#005a00] text-sm rounded-lg focus:ring-[#005a00] focus:border-[#005a00] block w-full ps-10 p-2.5 dark:bg-[#b5e3b3] dark:border-[#005a00] dark:placeholder-black dark:text-[#005a00] dark:focus:ring-blue-500 dark:focus:border-[#005a00]"
+                            placeholder="Select date start">
+                    </div>
+                    <span class="mx-4 text-gray-500">to</span>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                            </svg>
+                        </div>
+                        <input id="datepicker-range-end" name="end" type="text"
+                            class="bg-white border border-[#005a00] text-[#005a00] text-sm rounded-lg focus:ring-[#005a00] focus:border-[#005a00] block w-full ps-10 p-2.5 dark:bg-[#b5e3b3] dark:border-[#005a00] dark:placeholder-black dark:text-[#005a00] dark:focus:ring-blue-500 dark:focus:border-[#005a00]"
+                            placeholder="Select date end">
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-center items-center">
+                    <button type="submit"
+                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-[#005a00] dark:hover:bg-[#378f37] dark:focus:ring-[#005a00]">
+                        Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="mt-8 text-[#005a00]">
+        <h1 class="text-2xl ml-4 font-bold mb-2">Saved Goals</h1>
+        <div id="expensesList" class="space-y-1 bg-[#005a00] p-4 rounded-full shadow-lg mb-5">
+
+            <table id="selection-table" class="w-full border-collapse ">
+                <thead>
+                    <tr class="bg-[#005a00] text-white">
+                        <th class="p-2">Category</th>
+                        <th class="p-2">Start Date</th>
+                        <th class="p-2">End Date</th>
+                        <th class="p-2">Growth</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body" class="bg-white">
+                    <!-- Firebase data will be inserted here -->
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+
+
+
+    <!-- Footer -->
+    <footer id="footerPlaceholder" class="mt-auto"></footer>
+
+    <!-- JS functions -->
+    <script src="./scripts/authentication.js"></script>
+    <script src="./scripts/firebaseAPI_dtcteam10.js"></script>
+    <script src="./scripts/skeleton.js"></script>
+    <script src="./scripts/script.js"></script>
+    <script src="./scripts/goals.js"></script>
+</body>
+
+</html>
