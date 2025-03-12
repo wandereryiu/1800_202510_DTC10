@@ -3,95 +3,98 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <title>SimplSaving</title>
-    <meta name="Desciption" content="Financial tracking for students and graduated students who need help saving.">
+    <head>
+        <title>SimplSaving</title>
+        <meta name="Desciption" content="Financial tracking for students and graduated students who need help saving.">
 
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://cdn.tailwindcss.com"></script>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Firebase Libraries -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script>
-    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+        <!-- Firebase Libraries -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script>
+        <link type="text/css" rel="stylesheet"
+            href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
-    <!-- Custom Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playwrite+IT+Moderna:wght@100..400&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="./styles/style.css" />
+        <!-- Custom Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Playwrite+IT+Moderna:wght@100..400&display=swap"
+            rel="stylesheet">
+        <link rel="stylesheet" href="./styles/style.css" />
 
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playwrite+IT+Moderna:wght@100..400&display=swap');
-    </style>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Playwrite+IT+Moderna:wght@100..400&display=swap');
+        </style>
 
-</head>
+    </head>
 
-<body class="flex flex-col min-h-screen">
+    <body class="flex flex-col min-h-screen">
 
-    <!--Navigation Bar-->
-    <nav id="navbarPlaceholder"></nav>
+        <!--Navigation Bar-->
+        <nav id="navbarPlaceholder"></nav>
 
-    <!-- Financial Tracking Navbar -->
-    <div class="bg-[#005a00] text-white text-center py-3">
-        <div class="flex justify-center space-x-8 text-sm">
-            <a href="#" class="hover:underline">Spending</a>
-            <a href="#" class="hover:underline">Savings</a>
-            <a href="#" class="hover:underline">Payments</a>
-            <a href="#" class="hover:underline">Student Loans</a>
+        <!-- Financial Tracking Navbar -->
+        <div class="bg-[#005a00] text-white text-center py-3">
+            <div class="flex justify-center space-x-8 text-sm">
+                <a href="spending.html" class="hover:underline">Spending</a>
+                <a href="#" class="hover:underline">Savings</a>
+                <a href="#" class="hover:underline">Payments</a>
+                <a href="student_loans.html" class="hover:underline">Student Loans</a>
+            </div>
         </div>
-    </div>
 
-    <!-- Body -->
-    <div class="container mx-auto p-4 max-w-md">
-        <h1 class="max-w text-3xl font-bold text-center text-[#005a00] mb-6">Student Loan Calculator</h1>
-        <form id="loanForm" class="bg-white p-6 rounded-lg shadow-md">
-            <div class="mb-4">
-                <label for="loanAmount" class="block text-sm font-medium text-gray-700">Loan Amount ($):</label>
-                <input type="number" id="loanAmount"
-                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#005a00]"
-                    required>
-            </div>
-            <div class="mb-4">
-                <label for="interestRate" class="block text-sm font-medium text-gray-700">Annual Interest Rate
-                    (%):</label>
-                <input type="number" step="0.01" id="interestRate"
-                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#005a00]"
-                    required>
-            </div>
-            <div class="mb-4">
-                <label for="monthlyPayment" class="block text-sm font-medium text-gray-700">Monthly Payment ($):</label>
-                <input type="number" id="monthlyPayment"
-                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#005a00]"
-                    required>
-            </div>
-            <button type="submit"
-                class="w-full bg-[#005a00] text-white py-2 px-4 rounded-md hover:bg-[#169416] focus:outline-none focus:ring-2 focus:ring-[#005a00]">
-                Calculate Payoff Time
-            </button>
-        </form>
+        <!-- Body -->
+        <div class="container mx-auto p-4 max-w-md">
+            <h1 class="max-w text-3xl font-bold text-center text-[#005a00] mb-6">Student Loan Calculator</h1>
+            <form id="loanForm" class="bg-white p-6 rounded-lg shadow-md">
+                <div class="mb-4">
+                    <label for="loanAmount" class="block text-sm font-medium text-gray-700">Loan Amount ($):</label>
+                    <input type="number" id="loanAmount"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#005a00]"
+                        required>
+                </div>
+                <div class="mb-4">
+                    <label for="interestRate" class="block text-sm font-medium text-gray-700">Annual Interest Rate
+                        (%):</label>
+                    <input type="number" step="0.01" id="interestRate"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#005a00]"
+                        required>
+                </div>
+                <div class="mb-4">
+                    <label for="monthlyPayment" class="block text-sm font-medium text-gray-700">Monthly Payment
+                        ($):</label>
+                    <input type="number" id="monthlyPayment"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#005a00]"
+                        required>
+                </div>
+                <button type="submit"
+                    class="w-full bg-[#005a00] text-white py-2 px-4 rounded-md hover:bg-[#169416] focus:outline-none focus:ring-2 focus:ring-[#005a00]">
+                    Calculate Payoff Time
+                </button>
+            </form>
 
-        <div id="result" class="mt-6 p-4 bg-white rounded-lg shadow-md text-center text-lg font-semibold text-gray-700">
+            <div id="result"
+                class="mt-6 p-4 bg-white rounded-lg shadow-md text-center text-lg font-semibold text-gray-700">
+            </div>
         </div>
-    </div>
 
 
-    <!-- Footer -->
-    <!-- <nav id="footerPlaceholder"></nav> -->
+        <!-- Footer -->
+        <!-- <nav id="footerPlaceholder"></nav> -->
 
-    <!-- JS functions -->
-    <script src="./scripts/authentication.js"></script>
-    <script src="./scripts/firebaseAPI_dtcteam10.js"></script>
-    <script src="./scripts/skeleton.js"></script>
-    <script src="./scripts/script.js"></script>
+        <!-- JS functions -->
+        <script src="./scripts/authentication.js"></script>
+        <script src="./scripts/firebaseAPI_dtcteam10.js"></script>
+        <script src="./scripts/skeleton.js"></script>
+        <script src="./scripts/script.js"></script>
 
-</body>
+    </body>
 
 </html>
