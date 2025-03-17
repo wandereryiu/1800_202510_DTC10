@@ -1,10 +1,10 @@
 let currentUser;
 
 // Wait for authentication once
-firebase.auth().onAuthStateChanged(function (user) {
+firebase.auth().onAuthStateChanged(async function (user) {
     if (user) {
         currentUser = user;
-        loadGoals(); // Load goals after authentication
+        setTimeout(loadGoals, 500); // Wait before loading
     } else {
         console.log("No user is signed in");
         setTimeout(() => {
@@ -56,9 +56,16 @@ $(document).ready(function () {
 
         if (!currentUser) return;
 
-        db.collection("users").doc(currentUser.uid).collection("goals").orderBy("timestamp", "desc")
+        db.collection("users").doc(currentUser.uid).collection("goals")
+            .orderBy("timestamp", "desc")
             .onSnapshot((snapshot) => {
+                if (snapshot.empty) {
+                    tableBody.innerHTML = "<tr><td colspan='4'>No goals found</td></tr>";
+                    return;
+                }
+
                 tableBody.innerHTML = ""; // Clear previous data
+
                 snapshot.forEach((doc) => {
                     const data = doc.data();
                     const row = `
