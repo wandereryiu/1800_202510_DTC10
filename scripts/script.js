@@ -1,7 +1,11 @@
-function sayHello() {
+// Create Account OR Login
 
+function sayHello() {
+    //do something
 }
-//sayHello();
+//sayHello();    //invoke function
+
+//------------------------------------------------
 // Call this function when the "logout" button is clicked
 //-------------------------------------------------
 function logout() {
@@ -13,4 +17,17 @@ function logout() {
     });
 }
 
+// Function to get the current user's display name
+function displayUserName() {
+    firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+            document.getElementById('userName').innerHTML = "Hello, " + user.displayName + "!";
+        } else {
+            document.getElementById('userName').innerHTML = "Hello, Guest!";
+        }
+    });
+}
+
+// Call the function when the page loads
+displayUserName();
 
