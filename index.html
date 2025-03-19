@@ -3,62 +3,76 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <title>SimplSaving</title>
-        <meta name="Desciption" content="Financial tracking for students and graduated students who need help saving.">
+<head>
+    <title>SimplSaving</title>
+    <meta name="Desciption" content="Financial tracking for students and graduated students who need help saving.">
 
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.tailwindcss.com"></script>
 
-        <!-- Firebase Libraries -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script>
-        <link type="text/css" rel="stylesheet"
-            href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
-        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <!-- Firebase Libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
-        <!-- Custom Fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Playwrite+IT+Moderna:wght@100..400&display=swap"
-            rel="stylesheet">
-        <link rel="stylesheet" href="./styles/style.css" />
+    <!-- Custom Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playwrite+IT+Moderna:wght@100..400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="./styles/style.css" />
 
-        <style>
-            @import url('https://fonts.googleapis.com/css2?family=Playwrite+IT+Moderna:wght@100..400&display=swap');
-        </style>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playwrite+IT+Moderna:wght@100..400&display=swap');
+    </style>
 
-    </head>
+</head>
 
-    <body class="flex flex-col min-h-screen">
+<body class="flex flex-col min-h-screen">
 
+    <main>
         <!--Navigation Bar-->
         <nav id="navbarPlaceholder"></nav>
 
-        <!-- Body -->
-        <div class="mb-4 rounded-lg container mx-auto py-5">
-            <h1 class="text-5xl font-bold ">Transform Your Financial Future with SimplSaving</h1>
-            <p class=" text-lg mt-4">Discover a simple way to track your spending with easy-to-understand
-                data and daily insights.</p>
+        <!-- Welcome Banner -->
+        <div class="bg-gradient-to-r from-green-400 via-green-500 to-green-700 text-white py-24">
+            <div class="container mx-auto px-4 flex flex-col lg:flex-row items-center">
+                <div class="mb-8 lg:mb-0 lg:w-1/2">
+                    <img src="images/welcomebannerpiggy.png" alt="Financial Management Illustration"
+                        class="w-full max-w-md mx-auto">
+                </div>
+                <div class="lg:w-1/2 text-center lg:text-left">
+                    <h1 class="text-6xl font-bold mb-4">Transform Your Financial Future with SimplSaving</h1>
+                    <p class="text-xl mb-8">Discover a simple way to track your spending with easy-to-understand data
+                        and daily insights.</p>
+                    <p class="text-lg mb-8 font-sans">SimplSaving helps you manage your finances efficiently, ensuring
+                        you save more and stress less.</p>
+                    <!-- Call-to-Actions -->
+                    <div class="flex justify-center lg:justify-start space-x-4">
+                        <a href="login.html"
+                            class="bg-white text-green-500 font-bold px-8 py-4 rounded-full hover:bg-green-100 transition duration-300">Get Started</a>
+                        <a href="#"
+                            class="bg-transparent border border-white text-white font-bold px-8 py-4 rounded-full hover:bg-white hover:text-green-500 transition duration-300">Learn More</a>
+                    </div>
+                </div>
+            </div>
         </div>
-        <!-- Call to action -->
-        <main class="flex-1 container mx-auto p-6 text-center">
-            <a href="login.html" class="call bg-[#005a00] text-white px-8 py-4 rounded-md hover:bg-[#169416]">Get
-                Started</a>
-        </main>
-
-
-        <!-- Footer -->
-        <nav id="footerPlaceholder"></nav>
+    </main>
 
     <!-- Footer -->
     <footer id="footerPlaceholder" class="mt-auto"></footer>
 
-    </body>
+    <script src="./scripts/authentication.js"></script>
+    <script src="./scripts/firebaseAPI_dtcteam10.js"></script>
+    <script src="./scripts/skeleton.js"></script>
+    <script src="./scripts/script.js"></script>
+
+</body>
 
 </html>
