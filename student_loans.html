@@ -3,98 +3,140 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <title>SimplSaving</title>
-        <meta name="Desciption" content="Financial tracking for students and graduated students who need help saving.">
+<head>
+    <title>SimplSaving</title>
+    <meta name="Desciption" content="Financial tracking for students and graduated students who need help saving.">
 
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.tailwindcss.com"></script>
 
-        <!-- Firebase Libraries -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script>
-        <link type="text/css" rel="stylesheet"
-            href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
-        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <!-- Firebase Libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
-        <!-- Custom Fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Playwrite+IT+Moderna:wght@100..400&display=swap"
-            rel="stylesheet">
-        <link rel="stylesheet" href="./styles/style.css" />
+    <!-- Custom Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playwrite+IT+Moderna:wght@100..400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="./styles/style.css" />
 
-        <style>
-            @import url('https://fonts.googleapis.com/css2?family=Playwrite+IT+Moderna:wght@100..400&display=swap');
-        </style>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playwrite+IT+Moderna:wght@100..400&display=swap');
+    </style>
 
-    </head>
+</head>
 
-    <body class="flex flex-col min-h-screen">
+<body class="flex flex-col min-h-screen">
 
-        <!--Navigation Bar-->
-        <nav id="navbarPlaceholder"></nav>
+    <!--Navigation Bar-->
+    <nav id="navbarPlaceholder"></nav>
 
-        <!-- Financial Tracking Navbar -->
-        <div class="bg-[#005a00] text-white text-center py-3">
-            <div class="flex justify-center space-x-8 text-sm">
-                <a href="spending.html" class="hover:underline">Spending</a>
-                <a href="#" class="hover:underline">Savings</a>
-                <a href="#" class="hover:underline">Payments</a>
-                <a href="student_loans.html" class="hover:underline">Student Loans</a>
+    <!-- Financial Tracking Navbar -->
+    <div class="bg-[#005a00] text-white text-center py-3">
+        <div class="flex justify-center space-x-8 text-sm">
+            <a href="spending.html" class="hover:underline">Spending</a>
+            <a href="#" class="hover:underline">Savings</a>
+            <a href="#" class="hover:underline">Payments</a>
+            <a href="student_loans.html" class="hover:underline">Student Loans</a>
+        </div>
+    </div>
+
+    <!-- Body -->
+    <div class="mx-auto">
+        <h1 class="mt-4 text-2xl font-bold text-center mb-8 ">Student Loan Tracker</h1>
+        <div class="grid grid-cols-3 gap-6">
+            <!-- Loan Details -->
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-xl font-semibold mb-4 border-t-4 border-[#b5e3b3] pt-2">Loan Details</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium">Starting Amount</label>
+                        <input type="number" id="startingAmount" class="w-full p-2 border rounded-lg"
+                            placeholder="Enter starting amount">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium">Interest Rate</label>
+                        <input type="number" id="interestRate" class="w-full p-2 border rounded-lg"
+                            placeholder="Enter interest rate">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium">Monthly Payment</label>
+                        <input type="number" id="monthlyPayment" class="w-full p-2 border rounded-lg"
+                            placeholder="Enter monthly payment">
+                    </div>
+                    <button id="saveLoanDetails" class="w-full bg-[#b5e3b3] py-2 rounded-lg hover:bg-[#bfffbf] text-sm font-medium">
+                        Save Loan Details
+                    </button>
+                </div>
+            </div>
+
+            <!-- Progress Circle and Average Monthly Payment -->
+            <div class="flex flex-col items-center justify-center">
+                <div class="w-60 h-60 bg-[#b5e3b3] rounded-full flex items-center justify-center shadow-lg">
+                    <div class="text-center">
+                        <p id="progressPercentage" class="text-4xl font-bold">0%</p>
+                        <p class="text-sm">Progress</p>
+                    </div>
+                </div>
+                <div class="mt-6 bg-white p-4 rounded-lg shadow-lg text-center">
+                    <h3 class="text-sm font-medium">Average Monthly Payment</h3>
+                    <p id="averageMonthlyPayment" class="text-lg">$0</p>
+                </div>
+            </div>
+
+            <!-- Status -->
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-xl font-semibold mb-4 border-t-4 border-[#b5e3b3] pt-2">Status</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium">Years until debt-free</label>
+                        <p id="yearsUntilDebtFree" class="text-lg">0</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium">Start Date</label>
+                        <p id="startDate" class="text-lg">N/A</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium">Expected Pay-off Date</label>
+                        <p id="expectedPayoffDate" class="text-lg">N/A</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium">Total Interest Paid</label>
+                        <p id="totalInterestPaid" class="text-lg">$0</p>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- Body -->
-        <div class="container mx-auto p-4 max-w-md">
-            <h1 class="max-w text-3xl font-bold text-center text-[#005a00] mb-6">Student Loan Calculator</h1>
-            <form id="loanForm" class="bg-white p-6 rounded-lg shadow-md">
-                <div class="mb-4">
-                    <label for="loanAmount" class="block text-sm font-medium text-gray-700">Loan Amount ($):</label>
-                    <input type="number" id="loanAmount"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#005a00]"
-                        required>
-                </div>
-                <div class="mb-4">
-                    <label for="interestRate" class="block text-sm font-medium text-gray-700">Annual Interest Rate
-                        (%):</label>
-                    <input type="number" step="0.01" id="interestRate"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#005a00]"
-                        required>
-                </div>
-                <div class="mb-4">
-                    <label for="monthlyPayment" class="block text-sm font-medium text-gray-700">Monthly Payment
-                        ($):</label>
-                    <input type="number" id="monthlyPayment"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#005a00]"
-                        required>
-                </div>
-                <button type="submit"
-                    class="w-full bg-[#005a00] text-white py-2 px-4 rounded-md hover:bg-[#169416] focus:outline-none focus:ring-2 focus:ring-[#005a00]">
-                    Calculate Payoff Time
-                </button>
-            </form>
-
-            <div id="result"
-                class="mt-6 p-4 bg-white rounded-lg shadow-md text-center text-lg font-semibold text-gray-700">
+        <!-- Payment Log -->
+        <div class="mt-8 bg-white p-6 rounded-lg shadow-lg">
+            <h2 class="text-xl font-semibold mb-4 border-t-4 border-[#b5e3b3] pt-2">Payment Log</h2>
+            <div id="payment-log" class="grid grid-cols-3 gap-4">
+                <div class="font-medium">Date</div>
+                <div class="font-medium">Payment</div>
+                <div class="font-medium">Balance</div>
             </div>
         </div>
+    </div>
 
 
-        <!-- Footer -->
-        <!-- <nav id="footerPlaceholder"></nav> -->
+    <!-- Footer -->
+    <!-- <nav id="footerPlaceholder"></nav> -->
 
-        <!-- JS functions -->
-        <script src="./scripts/authentication.js"></script>
-        <script src="./scripts/firebaseAPI_dtcteam10.js"></script>
-        <script src="./scripts/skeleton.js"></script>
-        <script src="./scripts/script.js"></script>
+    <!-- JS functions -->
+    <script src="./scripts/authentication.js"></script>
+    <script src="./scripts/firebaseAPI_dtcteam10.js"></script>
+    <script src="./scripts/skeleton.js"></script>
+    <script src="./scripts/script.js"></script>
 
-    </body>
+</body>
 
 </html>

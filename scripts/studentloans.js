@@ -1,60 +1,62 @@
-function calculateStudentLoansPayoffTime(loanAmount, annualInterestRate, monthlyPayment) {
-    let remainingBalance = loanAmount;
-    let monthlyInterestRate = annualInterestRate / 100 / 12;
-    let months = 0;
+const database = firebase.database();
 
-    if (monthlyPayment <= remainingBalance * monthlyInterestRate) {
-        return "Your monthly payment is too low to pay off the loan.";
-    }
+function saveLoanDetails() {
+    const startingAmount = document.getElementById('startingAmount').value;
+    const interestRate = document.getElementById('interestRate').value;
+    const monthlyPayment = document.getElementById('monthlyPayment').value;
 
-    while (remainingBalance > 0) {
-        let interest = remainingBalance * monthlyInterestRate;
-        remainingBalance += interest;
-        remainingBalance -= monthlyPayment;
-        months++;
+    database.ref('loanDetails').set({
+        startingAmount: startingAmount,
+        interestRate: interestRate,
+        monthlyPayment: monthlyPayment
+    }).then(() => {
+        alert('Loan details saved successfully!');
+        updateStatus();
+    }).catch((error) => {
+        console.error('Error saving loan details: ', error);
+    });
+}
 
-        // Prevent infinite loop
-        if (months > 1000) {
-            return "The loan will not be paid off with the current payment plan.";
+// Load details from Firebase
+function loadLoanDetails() {
+    database.ref('loanDetails').once('value').then((snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            document.getElementById('startingAmount').value = data.startingAmount || '';
+            document.getElementById('interestRate').value = data.interestRate || '';
+            document.getElementById('monthlyPayment').value = data.monthlyPayment || '';
+            updateStatus();
         }
-    }
-
-    const years = Math.floor(months / 12);
-    const remainingMonths = months % 12;
-
-    return `It will take ${years} years and ${remainingMonths} months to pay off the loan.`;
+    }).catch((error) => {
+        console.error('Error loading loan details: ', error);
+    });
 }
 
+// Update the Status section based on loan details
+function updateStatus() {
+    const startingAmount = parseFloat(document.getElementById('startingAmount').value) || 0;
+    const interestRate = parseFloat(document.getElementById('interestRate').value) || 0;
+    const monthlyPayment = parseFloat(document.getElementById('monthlyPayment').value) || 0;
 
-async function saveToFirestore(loanAmount, interestRate, monthlyPayment, result) {
-    try {
-        await db.collection("loanCalculations").add({
-            loanAmount: loanAmount,
-            interestRate: interestRate,
-            monthlyPayment: monthlyPayment,
-            result: result,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        console.log("Data saved to Firestore!");
-    } catch (error) {
-        console.error("Error saving to Firestore: ", error);
-    }
+    if (startingAmount <= 0 || monthlyPayment <= 0) return;
+
+    // Calculate years until debt-free
+    const totalMonths = startingAmount / monthlyPayment;
+    const yearsUntilDebtFree = (totalMonths / 12).toFixed(1);
+    document.getElementById('yearsUntilDebtFree').textContent = yearsUntilDebtFree;
+
+    // Calculate total interest paid
+    const totalInterestPaid = (startingAmount * (interestRate / 100)).toFixed(2);
+    document.getElementById('totalInterestPaid').textContent = `$${totalInterestPaid}`;
+
+    // Update progress percentage
+    const progressPercentage = ((monthlyPayment / startingAmount) * 100).toFixed(1);
+    document.getElementById('progressPercentage').textContent = `${progressPercentage}%`;
+
+    // Update average monthly payment
+    document.getElementById('averageMonthlyPayment').textContent = `$${monthlyPayment}`;
 }
 
-document.getElementById('loanForm').addEventListener('submit', async function (e) {
-    e.preventDefault();
+document.getElementById('saveLoanDetails').addEventListener('click', saveLoanDetails);
 
-    const loanAmount = parseFloat(document.getElementById('loanAmount').value);
-    const interestRate = parseFloat(document.getElementById('interestRate').value);
-    const monthlyPayment = parseFloat(document.getElementById('monthlyPayment').value);
-
-    if (isNaN(loanAmount) || isNaN(interestRate) || isNaN(monthlyPayment)) {
-        document.getElementById('result').textContent = "Please enter valid numbers.";
-        return;
-    }
-
-    const result = calculatePayoffTime(loanAmount, interestRate, monthlyPayment);
-    document.getElementById('result').textContent = result;
-
-    await saveToFirestore(loanAmount, interestRate, monthlyPayment, result);
-});
+window.addEventListener('load', loadLoanDetails);
