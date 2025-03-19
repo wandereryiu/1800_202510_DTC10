@@ -28,11 +28,12 @@ expenseForm.addEventListener('submit', async function (e) {
 
         // Get form values
         const amount = document.getElementById('expenseAmount').value;
+        const date = document.getElementById('expenseDate').value;
         const category = document.getElementById('expenseCategory').value;
         const description = document.getElementById('expenseDescription').value;
 
         // Basic validation
-        if (!amount || !category || !description) {
+        if (!amount || !date || !category || !description) {
             alert('Please fill in all fields');
             return;
         }
@@ -41,6 +42,7 @@ expenseForm.addEventListener('submit', async function (e) {
         await db.collection('expenses').add({
             userId: currentUser.uid,
             amount: parseFloat(amount),
+            date: date,
             category: category,
             description: description,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
@@ -102,6 +104,7 @@ async function loadExpenses() {
                         <div>
                             <p class="font-semibold">${expense.description}</p>
                             <p class="text-sm text-gray-600">${expense.category}</p>
+                            <p class="text-xs text-gray-500">${expense.date}</p>
                         </div>
                         <p class="font-bold">$${expense.amount.toFixed(2)}</p>
                     </div>
@@ -127,4 +130,10 @@ document.getElementById("expenseAmount").addEventListener("input", function (e) 
             e.target.value = value.toFixed(2);
         }
     }
+});
+
+// Set default date to today
+document.addEventListener('DOMContentLoaded', function () {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('expenseDate').value = today;
 }); 
