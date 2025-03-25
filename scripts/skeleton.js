@@ -29,3 +29,4 @@ function loadContent(elementId, url) {
 }
 
 loadSkeleton(); // invoke the function
+
