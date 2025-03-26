@@ -38,86 +38,74 @@
 
     <!--Navigation Bar-->
     <nav id="navbarPlaceholder"></nav>
+    <div class="bg-[#005a00] text-white text-center py-3">
+        <div class="flex justify-center space-x-8 text-sm">
+            <a href="#" class="hover:underline">Spending</a>
+            <a href="#" class="hover:underline">Savings</a>
+            <a href="#" class="hover:underline">Payments</a>
+            <a href="student_loans.html" class="hover:underline">Student Loans</a>
+        </div>
+    </div>
 
     <!-- Body -->
-
-    <div class="mt-3 ml-5 text-5xl font-extrabold font-serif">
-        <header class="text-[#005a00] ">Welcome <span id="name-goes-here">!</span></header>
-    </div>
+     
+    <h class="text-3xl font-extrabold font-serif mt-3 text-[#005a00] border-[#b5e3b3]">Welcome, <span id="name-goes-here">Loading...</span>!</h>
 
     <section class="bg-white dark:bg-white">
         <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16">
-            <div
-                class="bg-gray-50 dark:bg-white border border-[#005a00] dark:border-gray-700 rounded-lg p-8 md:p-12 mb-8">
-                <h1 class="text-gray-900 dark:text-[#005a00] text-3xl md:text-5xl font-extrabold font-serif mb-2">
-                    Overview Of Expenses</h1>
-                <hr class="h-px my-8 bg-[#005a00] border-0 dark:bg-[#005a00]">
-
-                <!-- Total Amount Display -->
-                <div class="mb-6">
-                    <p class="text-2xl font-mono text-[#005a00] dark:text-[#005a00] font-bold">
-                        Total: <span id="totalAmount">$0.00</span>
-                    </p>
-                </div>
-
+            <div class="bg-gray-50 dark:bg-white border border-[#005a00] dark:border-gray-700 rounded-lg p-8 md:p-12 mb-8">
+                <h1 class="text-gray-900 dark:text-[#005a00] text-3xl md:text-5xl font-extrabold font-serif mb-2">Overview Of Expenses</h1>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 50" class="w-full">
+                    <path fill="transparent" stroke="#005a00" stroke-width="2" d="M0 25 Q 50 0, 100 25 T 200 25 T 300 25 T 400 25 T 500 25" />
+                </svg>
+                <p id="totalAmount" class="text-2xl font-mono text-[#005a00] dark:text-[#005a00] mb-6 font-bold">
+                    $0.00</p>
                 <!-- Recent Expenses List -->
                 <div id="expensesList" class="space-y-3 mb-6">
                     <!-- Expenses will be dynamically inserted here -->
                 </div>
+                
+
 
                 <a href="spending.html"
                     class="inline-flex justify-center items-center py-2.5 px-5 text-base font-medium text-center text-white rounded-lg bg-[#005a00] hover:bg-[#358135] focus:ring-4 focus:ring-[#005a00] dark:focus:ring-[#005a00]">
                     View All Expenses
-                    <svg class="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                        fill="none" viewBox="0 0 14 10">
+                    <svg class="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M1 5h12m0 0L9 1m4 4L9 9" />
                     </svg>
                 </a>
             </div>
             <div class="grid md:grid-cols-2 gap-8">
-        
-        <section class="bg-white dark:bg-white">
-            <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16">
-                <div
-                    class="bg-gray-50 dark:bg-white border border-[#005a00] dark:border-[#005a00] rounded-lg p-8 md:p-12">
-                    <h2 class="text-gray-900 dark:text-[#005a00] text-3xl font-extrabold mb-2 font-serif">Insights
-                    </h2>
-                    <hr class="h-px my-8 bg-[#005a00] border-0 dark:bg-[#005a00]">
-                    <p class="text-xl  text-[#005a00] dark:text-[#005a00] mb-4 font-normal"><span
-                            class="font-extrabold">For Review</span> See how much money spent in the last month </p>
-                    <a href="#"
-                        class="text-[#005a00] dark:text-[#005a00] hover:underline  text-lg inline-flex items-center font-extrabold">View
-                        Insights
-                        <svg class="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M1 5h12m0 0L9 1m4 4L9 9" />
-                        </svg>
+                <div class="bg-gray-50 dark:bg-white border border-[#005a00] dark:border-[#005a00] rounded-lg p-8 md:p-12">
+                    <h2 class="text-gray-900 dark:text-[#005a00] text-3xl font-extrabold mb-2 font-serif">Insights</h2>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 50" class="w-full">
+                        <path fill="transparent" stroke="#005a00" stroke-width="2" d="M0 25 Q 50 0, 100 25 T 200 25 T 300 25 T 400 25 T 500 25" />
+                    </svg>
+                    <p class="text-xl  text-[#005a00] dark:text-[#005a00] mb-4 font-normal"><span class="font-extrabold">For Review</span> See how much money spent in the last month </p>
+                    <a href="#" class="text-[#005a00] dark:text-[#005a00] hover:underline  text-lg inline-flex items-center font-extrabold">View Insights
+                        <svg class="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                    </svg>
                     </a>
                 </div>
-                <div
-                    class="bg-gray-50 dark:bg-white border border-[#005a00] dark:border-[#005a00] rounded-lg p-8 md:p-12">
-                    <h2 class="text-gray-900 dark:text-[#005a00] text-3xl font-extrabold mb-2 font-serif">Saving
-                        Goals</h2>
-                    <hr class="h-px my-8 bg-[#005a00] border-0 dark:bg-[#005a00]">
-                    <p class="text-xl  text-[#005a00] dark:text-[#005a00] mb-4 font-normal"><span
-                            class="font-extrabold">Saving is easy.</span> Reach your goals faster with recurring
-                        deposits</p>
-                    <a href="goals.html"
-                        class="text-[#005a00] dark:text-[#005a00] hover:underline  text-lg inline-flex items-center font-extrabold">View
-                        Savings
-                        <svg class="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M1 5h12m0 0L9 1m4 4L9 9" />
-                        </svg>
+                <div class="bg-gray-50 dark:bg-white border border-[#005a00] dark:border-[#005a00] rounded-lg p-8 md:p-12">
+                    <h2 class="text-gray-900 dark:text-[#005a00] text-3xl font-extrabold mb-2 font-serif">Saving Goals</h2>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 50" class="w-full">
+                        <path fill="transparent" stroke="#005a00" stroke-width="2" d="M0 25 Q 50 0, 100 25 T 200 25 T 300 25 T 400 25 T 500 25" />
+                    </svg>
+                    <p class="text-xl  text-[#005a00] dark:text-[#005a00] mb-4 font-normal"><span class="font-extrabold">Saving is easy.</span>Reach your goals faster with recurring deposits</p>
+                    <a href="goals.html" class="text-[#005a00] dark:text-[#005a00] hover:underline  text-lg inline-flex items-center font-extrabold">View Savings
+                        <svg class="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                    </svg>
                     </a>
                 </div>
             </div>
         </div>
     </section>
-
+    
 
 
 
@@ -126,10 +114,10 @@
 
     <!-- JS functions -->
     <script src="./scripts/firebaseAPI_dtcteam10.js"></script>
-    <script src="./scripts/script.js"></script>
-    <script src="./scripts/skeleton.js"></script>
-    <script src="./scripts/main.js"></script>
     <script src="./scripts/authentication.js"></script>
+    <script src="./scripts/skeleton.js"></script>
+    <script src="./scripts/script.js"></script>
+    <script src="./scripts/main.js"></script>
 
 </body>
 
