@@ -22,6 +22,8 @@
             href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
         <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
+        <!-- Chart.js -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
         <!-- Custom Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -53,69 +55,102 @@
 
         <!-- Form Section-->
         <div class="flex-grow">
-            <div class="container mx-auto px-4 py-8 max-w-4xl">
+            <div class="container mx-auto px-4 py-8">
                 <div class="bg-white rounded-lg shadow-lg p-6">
                     <!-- Expense Form -->
                     <div class="mb-8">
                         <h2 class="text-2xl font-bold text-[#005a00] mb-4 text-center">Add New Expense</h2>
                         <form id="expenseForm" class="max-w-md mx-auto">
-                            <div class="mb-4">
-                                <label for="expenseAmount" class="block text-sm font-medium text-gray-700">Amount
-                                    ($):</label>
-                                <input type="number" id="expenseAmount" step="0.01" min="0" placeholder="0.00"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#005a00]"
-                                    required>
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="expenseAmount" class="block text-sm font-medium text-[#005a00]">Amount
+                                        ($)</label>
+                                    <input type="number" id="expenseAmount" step="0.01" min="0" placeholder="0.00"
+                                        class="w-full mt-1 px-4 py-3 border border-gray-300 rounded-lg shadow-sm 
+                                        focus:outline-none focus:ring-2 focus:ring-[#005a00]" required>
+                                </div>
+                                <div>
+                                    <label for="expenseDate"
+                                        class="block text-sm font-medium text-[#005a00]">Date</label>
+                                    <input type="date" id="expenseDate" class="w-full mt-1 px-4 py-3 border border-gray-300 rounded-lg shadow-sm 
+                                        focus:outline-none focus:ring-2 focus:ring-[#005a00]" required>
+                                </div>
+                                <div>
+                                    <label for="expenseCategory"
+                                        class="block text-sm font-medium text-[#005a00]">Category</label>
+                                    <select id="expenseCategory" class="w-full mt-1 px-4 py-3 border border-gray-300 rounded-lg shadow-sm 
+                                        focus:outline-none focus:ring-2 focus:ring-[#005a00]" required>
+                                        <option value="">Select a category</option>
+                                        <option value="Food">Food</option>
+                                        <option value="Transportation">Transportation</option>
+                                        <option value="Entertainment">Entertainment</option>
+                                        <option value="Bills">Bills</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="expenseDescription"
+                                        class="block text-sm font-medium text-[#005a00]">Description</label>
+                                    <input type="text" id="expenseDescription" class="w-full mt-1 px-4 py-3 border border-gray-300 rounded-lg shadow-sm 
+                                        focus:outline-none focus:ring-2 focus:ring-[#005a00]" required>
+                                </div>
+                                <button type="submit" class="w-full py-3 bg-[#005a00] text-white rounded-lg hover:bg-[#169416] 
+                                    transition-colors font-medium text-lg">
+                                    Add Expense
+                                </button>
                             </div>
-                            <div class="mb-4">
-                                <label for="expenseDate" class="block text-sm font-medium text-gray-700">Date:</label>
-                                <input type="date" id="expenseDate"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#005a00]"
-                                    required>
-                            </div>
-                            <div class="mb-4">
-                                <label for="expenseCategory"
-                                    class="block text-sm font-medium text-gray-700">Category:</label>
-                                <select id="expenseCategory"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#005a00]"
-                                    required>
-                                    <option value="">Select a category</option>
-                                    <option value="Groceries">Groceries</option>
-                                    <option value="Transportation">Transportation</option>
-                                    <option value="Entertainment">Entertainment</option>
-                                    <option value="Bills">Bills</option>
-                                    <option value="Shopping">Shopping</option>
-                                    <option value="Eating-out">Eating-out</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
-                            <div class="mb-4">
-                                <label for="expenseDescription"
-                                    class="block text-sm font-medium text-gray-700">Description:</label>
-                                <input type="text" id="expenseDescription"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#005a00]"
-                                    required>
-                            </div>
-                            <button type="submit"
-                                class="w-full bg-[#005a00] text-white px-4 py-2 rounded-md hover:bg-[#169416] transition-colors">
-                                Add Expense
-                            </button>
                         </form>
                     </div>
 
                     <!-- Monthly Summary -->
                     <div class="mb-8">
                         <h2 class="text-2xl font-bold text-[#005a00] mb-4 text-center">Monthly Summary</h2>
-                        <div class="bg-gray-50 rounded-lg p-4 max-w-md mx-auto">
-                            <p id="monthlyTotal" class="text-xl font-bold text-center">Total: $0.00</p>
+                        <div class="max-w-4xl mx-auto mb-8 p-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Category Distribution Chart -->
+                                <div class="bg-white rounded-lg shadow p-4">
+                                    <h3 class="text-lg font-semibold text-[#005a00] mb-4">Spending by Category</h3>
+                                    <canvas id="categoryChart"></canvas>
+                                </div>
+
+                                <!-- Daily Spending Trend -->
+                                <div class="bg-white rounded-lg shadow p-4">
+                                    <h3 class="text-lg font-semibold text-[#005a00] mb-4">Daily Spending Trend</h3>
+                                    <canvas id="trendChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="max-w-md mx-auto mb-4">
+                            <div class="flex flex-col sm:flex-row gap-4 justify-center mb-4">
+                                <div class="w-full sm:w-auto">
+                                    <label for="startDate"
+                                        class="block text-sm font-medium text-[#005a00]">From:</label>
+                                    <input type="date" id="startDate"
+                                        class="w-full mt-1 px-4 py-3 bg-[#005a00] text-white border border-[#169416] rounded-lg shadow-sm 
+                                        focus:outline-none focus:ring-2 focus:ring-[#169416] 
+                                        focus:border-[#169416] hover:bg-[#169416] transition-colors
+                                        [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert">
+                                </div>
+                                <div class="w-full sm:w-auto">
+                                    <label for="endDate" class="block text-sm font-medium text-[#005a00]">To:</label>
+                                    <input type="date" id="endDate"
+                                        class="w-full mt-1 px-4 py-3 bg-[#005a00] text-white border border-[#169416] rounded-lg shadow-sm 
+                                        focus:outline-none focus:ring-2 focus:ring-[#169416] 
+                                        focus:border-[#169416] hover:bg-[#169416] transition-colors
+                                        [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert">
+                                </div>
+                            </div>
+                            <div class="bg-gray-50 rounded-lg p-6 shadow-md">
+                                <p id="dateRange" class="text-sm text-gray-600 text-center mb-3"></p>
+                                <p id="monthlyTotal" class="text-2xl font-bold text-center text-[#005a00]">Total: $0.00
+                                </p>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Recent Expenses -->
-                    <div>
-                        <h2 class="text-2xl font-bold text-[#005a00] mb-4 text-center">Recent Expenses</h2>
-                        <div id="expensesList" class="space-y-3 max-w-2xl mx-auto">
-                            <!-- Expenses will be dynamically inserted here -->
-                        </div>
+                    <!-- Expenses List -->
+                    <div id="expensesList" class="max-w-md mx-auto space-y-4">
+                        <!-- Expenses will be dynamically inserted here -->
                     </div>
                 </div>
             </div>
