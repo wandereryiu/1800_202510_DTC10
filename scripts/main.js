@@ -19,12 +19,18 @@ function displayUserName() {
     if (user) {
         db.collection("users").doc(user.uid).get()
             .then(userDoc => {
-                const userName = userDoc.data().name;
-                document.getElementById("name-goes-here").innerHTML = userName;
+                if (userDoc.exists) {
+                    const userName = userDoc.data().name;
+                    document.getElementById("name-goes-here").innerHTML = userName || "Unknown User";
+                } else {
+                    console.error("User document does not exist");
+                    document.getElementById("name-goes-here").innerHTML = "Unknown User";
+                }
             })
             .catch(e => console.error("Error getting user name:", e));
     }
 }
+
 
 // Load and display expenses
 function loadExpenses() {
