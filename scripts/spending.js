@@ -235,7 +235,9 @@ function initializeCharts() {
                     '#169416',
                     '#2fa72f',
                     '#47ba47',
-                    '#60cd60'
+                    '#60cd60',
+                    '#66CDAA',
+                    '#556B2F'
                 ]
             }]
         },
