@@ -30,7 +30,7 @@ async function updateCategoryChart() {
         const categories = Object.keys(categoryTotals);
         const amounts = Object.values(categoryTotals);
         const colors = [
-            "#b91d47", "#00aba9", "#2b5797", "#e8c3b9", "#ffff66", "#339966", "#ff9933"
+            "#b91d47", "#00aba9", "#2b5797", "#f59176", "#ffff66", "#339966", "#ff9933"
         ].slice(0, categories.length); // Adjust color count
 
         // Destroy previous chart instance if exists
