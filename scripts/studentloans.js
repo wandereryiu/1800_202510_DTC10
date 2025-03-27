@@ -31,8 +31,8 @@ function saveLoanDetails() {
         return;
     }
 
-    // Save to Firestore under user's document
-    db.collection('users').doc(user.uid).collection('loans').doc('current').set({
+    // Save to Firestore in studentLoans collection
+    db.collection('studentLoans').doc(user.uid).set({
         startingAmount: parseFloat(startingAmount),
         interestRate: parseFloat(interestRate),
         monthlyPayment: parseFloat(monthlyPayment),
@@ -54,7 +54,7 @@ function loadLoanDetails() {
     const user = firebase.auth().currentUser;
     if (!user) return;
 
-    db.collection('users').doc(user.uid).collection('loans').doc('current').get()
+    db.collection('studentLoans').doc(user.uid).get()
         .then((doc) => {
             if (doc && doc.data()) {
                 const data = doc.data();
@@ -85,7 +85,7 @@ function recordPayment() {
     }
 
     // Get current loan details
-    db.collection('users').doc(user.uid).collection('loans').doc('current').get()
+    db.collection('studentLoans').doc(user.uid).get()
         .then((doc) => {
             if (!doc || !doc.data()) {
                 alert('Please save loan details first');
@@ -97,13 +97,13 @@ function recordPayment() {
             const newTotalInterestPaid = loanData.totalInterestPaid + (loanData.remainingAmount * (loanData.interestRate / 100 / 12));
 
             // Update loan details
-            db.collection('users').doc(user.uid).collection('loans').doc('current').update({
+            db.collection('studentLoans').doc(user.uid).update({
                 remainingAmount: remainingAmount,
                 totalInterestPaid: newTotalInterestPaid
             });
 
             // Add payment to history
-            return db.collection('users').doc(user.uid).collection('loans').doc('current')
+            return db.collection('studentLoans').doc(user.uid)
                 .collection('payments').add({
                     amount: paymentAmount,
                     date: new Date(),
@@ -139,7 +139,7 @@ function loadPaymentHistory() {
         </div>
     `;
 
-    db.collection('users').doc(user.uid).collection('loans').doc('current')
+    db.collection('studentLoans').doc(user.uid)
         .collection('payments').orderBy('date', 'desc').get()
         .then((snapshot) => {
             const paymentRows = document.getElementById('payment-rows');
@@ -169,7 +169,7 @@ function updateStatus() {
     const user = firebase.auth().currentUser;
     if (!user) return;
 
-    db.collection('users').doc(user.uid).collection('loans').doc('current').get()
+    db.collection('studentLoans').doc(user.uid).get()
         .then((doc) => {
             if (!doc || !doc.data()) return;
 
