@@ -43,15 +43,15 @@
         <!--Navigation Bar-->
         <nav id="navbarPlaceholder"></nav>
 
-    <!-- Financial Tracking Navbar -->
-    <div class="bg-[#005a00] text-white text-center py-3">
-        <div class="flex justify-center space-x-8 text-sm">
-            <a href="spending.html" class="hover:underline">Spending</a>
-            <a href="goals.html" class="hover:underline">Savings</a>
-            <a href="insights.html" class="hover:underline">Insights</a>
-            <a href="student_loans.html" class="hover:underline">Student Loans</a>
+        <!-- Financial Tracking Navbar -->
+        <div class="bg-[#005a00] text-white text-center py-3">
+            <div class="flex justify-center space-x-8 text-sm">
+                <a href="spending.html" class="hover:underline">Spending</a>
+                <a href="goals.html" class="hover:underline">Savings</a>
+                <a href="insights.html" class="hover:underline">Insights</a>
+                <a href="student_loans.html" class="hover:underline">Student Loans</a>
+            </div>
         </div>
-    </div>
 
         <!-- Form Section-->
         <div class="flex-grow">
@@ -65,9 +65,16 @@
                                 <div>
                                     <label for="expenseAmount" class="block text-sm font-medium text-[#005a00]">Amount
                                         ($)</label>
-                                    <input type="number" id="expenseAmount" step="0.01" min="0" placeholder="0.00"
-                                        class="w-full mt-1 px-4 py-3 border border-gray-300 rounded-lg shadow-sm 
-                                        focus:outline-none focus:ring-2 focus:ring-[#005a00]" required>
+                                    <div class="mt-1 relative rounded-md shadow-sm">
+                                        <div
+                                            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <span class="text-gray-500 sm:text-sm">$</span>
+                                        </div>
+                                        <input type="text" id="expenseAmount" inputmode="decimal"
+                                            pattern="^[0-9]+(\.[0-9]{1,2})?$" placeholder="0.00" class="w-full pl-7 px-4 py-3 border border-gray-300 rounded-lg shadow-sm 
+                                            focus:outline-none focus:ring-2 focus:ring-[#005a00]" required>
+                                    </div>
+                                    <p class="mt-1 text-xs text-gray-500">Enter numbers only (e.g. 10 or 10.99)</p>
                                 </div>
                                 <div>
                                     <label for="expenseDate"
@@ -106,22 +113,7 @@
 
                     <!-- Monthly Summary -->
                     <div class="mb-8">
-                        <h2 class="text-2xl font-bold text-[#005a00] mb-4 text-center">Monthly Summary</h2>
-                        <div class="max-w-4xl mx-auto mb-8 p-4">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <!-- Category Distribution Chart -->
-                                <div class="bg-white rounded-lg shadow p-4">
-                                    <h3 class="text-lg font-semibold text-[#005a00] mb-4">Spending by Category</h3>
-                                    <canvas id="categoryChart"></canvas>
-                                </div>
-
-                                <!-- Daily Spending Trend -->
-                                <div class="bg-white rounded-lg shadow p-4">
-                                    <h3 class="text-lg font-semibold text-[#005a00] mb-4">Daily Spending Trend</h3>
-                                    <canvas id="trendChart"></canvas>
-                                </div>
-                            </div>
-                        </div>
+                        <h2 class="text-2xl font-bold text-[#005a00] mb-4 text-center">Spending Summary</h2>
                         <div class="max-w-md mx-auto mb-4">
                             <div class="flex flex-col sm:flex-row gap-4 justify-center mb-4">
                                 <div class="w-full sm:w-auto">
@@ -129,17 +121,17 @@
                                         class="block text-sm font-medium text-[#005a00]">From:</label>
                                     <input type="date" id="startDate"
                                         class="w-full mt-1 px-4 py-3 bg-[#005a00] text-white border border-[#169416] rounded-lg shadow-sm 
-                                        focus:outline-none focus:ring-2 focus:ring-[#169416] 
-                                        focus:border-[#169416] hover:bg-[#169416] transition-colors
-                                        [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert">
+                                                                focus:outline-none focus:ring-2 focus:ring-[#169416] 
+                                                                focus:border-[#169416] hover:bg-[#169416] transition-colors
+                                                                [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert">
                                 </div>
                                 <div class="w-full sm:w-auto">
                                     <label for="endDate" class="block text-sm font-medium text-[#005a00]">To:</label>
                                     <input type="date" id="endDate"
                                         class="w-full mt-1 px-4 py-3 bg-[#005a00] text-white border border-[#169416] rounded-lg shadow-sm 
-                                        focus:outline-none focus:ring-2 focus:ring-[#169416] 
-                                        focus:border-[#169416] hover:bg-[#169416] transition-colors
-                                        [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert">
+                                                                focus:outline-none focus:ring-2 focus:ring-[#169416] 
+                                                                focus:border-[#169416] hover:bg-[#169416] transition-colors
+                                                                [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert">
                                 </div>
                             </div>
                             <div class="bg-gray-50 rounded-lg p-6 shadow-md">
@@ -148,10 +140,22 @@
                                 </p>
                             </div>
                         </div>
-                    </div>
+                        <div class="max-w-4xl mx-auto mb-8 p-4">
+                            <div class="grid grid-cols-1 gap-6">
+                                <!-- Daily Spending Trend -->
+                                <div class="bg-white rounded-lg shadow p-4">
+                                    <h3 class="text-lg font-semibold text-[#005a00] mb-4">Daily Spending Trend</h3>
+                                    <canvas id="trendChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
 
+                    </div>
+                    <div class="mb-8">
+                        <h2 class="text-2xl font-bold text-[#005a00] mb-4 text-center">Displaying Transactions</h2>
+                    </div>
                     <!-- Expenses List -->
-                    <div id="expensesList" class="max-w-md mx-auto space-y-4">
+                    <div id="expensesList" class="max-w-md mx-auto space-y-2">
                         <!-- Expenses will be dynamically inserted here -->
                     </div>
                 </div>

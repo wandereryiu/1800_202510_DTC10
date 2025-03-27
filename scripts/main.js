@@ -75,6 +75,21 @@ function loadExpenses() {
         });
 }
 
+// Function to format date for a more compact display
+function formatDateCompact(dateString) {
+    if (!dateString) return 'No date';
+    // Create a date object by parsing parts to avoid timezone issues
+    const [year, month, day] = dateString.split('-').map(num => parseInt(num, 10));
+    // Note: month is 0-indexed in JavaScript Date
+    const date = new Date(year, month - 1, day);
+
+    return date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+    });
+}
+
 // Display expenses in a formatted list
 function displayExpenses(expenses) {
     const expensesList = document.getElementById('expensesList');
@@ -86,13 +101,18 @@ function displayExpenses(expenses) {
     }
 
     expenses.forEach((expense) => {
+        // Format date for display
+        const formattedDate = formatDateCompact(expense.date);
+
         expensesList.innerHTML += `
             <div class="p-3 bg-white rounded-md border border-[#005a00]">
                 <div class="flex justify-between items-center">
                     <div>
-                        <p class="font-semibold text-[#005a00]">${expense.description}</p>
-                        <p class="text-sm text-gray-600">${expense.category}</p>
-                        <p class="text-xs text-gray-500">${expense.date || 'No date'}</p>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-gray-500">${formattedDate}</span>
+                        </div>
+                        <p class="font-semibold text-[#005a00]">${expense.category}</p>
+                        <p class="text-xs text-gray-600">${expense.description}</p>
                     </div>
                     <div class="flex items-center gap-3">
                         <p class="font-bold text-[#005a00]">$${expense.amount.toFixed(2)}</p>
@@ -115,6 +135,59 @@ function updateTotal(expenses) {
     document.getElementById('totalAmount').textContent = `$${total.toFixed(2)}`;
 }
 
+// Create a custom confirmation dialog
+function showDeleteConfirmation(expenseId) {
+    // Check if a confirmation dialog already exists and remove it
+    const existingConfirm = document.getElementById('custom-confirm-dialog');
+    if (existingConfirm) {
+        existingConfirm.remove();
+    }
+
+    // Create the confirmation dialog
+    const confirmDialog = document.createElement('div');
+    confirmDialog.id = 'custom-confirm-dialog';
+    confirmDialog.className = 'fixed inset-0 flex items-center justify-center z-50';
+    confirmDialog.innerHTML = `
+        <div class="fixed inset-0 bg-black bg-opacity-50"></div>
+        <div class="bg-white rounded-lg shadow-lg p-6 w-80 relative z-10 border-2 border-[#005a00]">
+            <h3 class="text-lg font-bold text-[#005a00] mb-4">Delete Expense</h3>
+            <p class="mb-6 text-gray-700">Are you sure you want to delete this expense?</p>
+            <div class="flex justify-end space-x-3">
+                <button id="cancel-delete" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
+                    Cancel
+                </button>
+                <button id="confirm-delete" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+                    Delete
+                </button>
+            </div>
+        </div>
+    `;
+
+    // Add to body
+    document.body.appendChild(confirmDialog);
+
+    // Add event listeners
+    document.getElementById('cancel-delete').addEventListener('click', () => {
+        confirmDialog.remove();
+    });
+
+    document.getElementById('confirm-delete').addEventListener('click', async () => {
+        confirmDialog.remove();
+        try {
+            await db.collection('expenses').doc(expenseId).delete();
+            loadExpenses(); // Refresh the expenses list
+        } catch (error) {
+            console.error('Error deleting expense:', error);
+            alert('Error deleting expense: ' + error.message);
+        }
+    });
+
+    // Also close on backdrop click
+    confirmDialog.querySelector('.fixed.inset-0.bg-black').addEventListener('click', () => {
+        confirmDialog.remove();
+    });
+}
+
 // Add the delete expense function
 async function deleteExpense(expenseId) {
     try {
@@ -125,19 +198,11 @@ async function deleteExpense(expenseId) {
             return;
         }
 
-        // Confirm before deleting
-        if (!confirm('Are you sure you want to delete this expense?')) {
-            return;
-        }
-
-        // Delete from Firestore
-        await db.collection('expenses').doc(expenseId).delete();
-
-        // Refresh the expenses list
-        loadExpenses();
+        // Show custom confirmation dialog instead of browser confirm
+        showDeleteConfirmation(expenseId);
 
     } catch (error) {
-        console.error('Error deleting expense:', error);
-        alert('Error deleting expense: ' + error.message);
+        console.error('Error in delete process:', error);
+        alert('Error processing delete: ' + error.message);
     }
 }

@@ -27,21 +27,28 @@ expenseForm.addEventListener('submit', async function (e) {
         }
 
         // Get form values
-        const amount = document.getElementById('expenseAmount').value;
+        const amountInput = document.getElementById('expenseAmount').value.trim();
         const date = document.getElementById('expenseDate').value;
         const category = document.getElementById('expenseCategory').value;
         const description = document.getElementById('expenseDescription').value;
 
-        // Basic validation
-        if (!amount || !date || !category || !description) {
+        // Enhanced validation
+        if (!amountInput || !date || !category || !description) {
             alert('Please fill in all fields');
+            return;
+        }
+
+        // Validate amount is a proper number
+        const amount = parseFloat(amountInput);
+        if (isNaN(amount) || amount <= 0) {
+            alert('Please enter a valid positive number for amount');
             return;
         }
 
         // Add to Firestore
         await db.collection('expenses').add({
             userId: currentUser.uid,
-            amount: parseFloat(amount),
+            amount: amount,
             date: date,
             category: category,
             description: description,
@@ -70,10 +77,29 @@ function setDefaultDates() {
 
 // Function to format date for display
 function formatDate(dateString) {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    // Create a date object by parsing parts to avoid timezone issues
+    const [year, month, day] = dateString.split('-').map(num => parseInt(num, 10));
+    // Note: month is 0-indexed in JavaScript Date
+    const date = new Date(year, month - 1, day);
+
+    return date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
+    });
+}
+
+// Function to format date for a more compact display
+function formatDateCompact(dateString) {
+    // Create a date object by parsing parts to avoid timezone issues
+    const [year, month, day] = dateString.split('-').map(num => parseInt(num, 10));
+    // Note: month is 0-indexed in JavaScript Date
+    const date = new Date(year, month - 1, day);
+
+    return date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
     });
 }
 
@@ -129,20 +155,27 @@ async function loadExpenses() {
             return;
         }
 
-        expenses.forEach((expense) => {
+        expenses.forEach((expense, index) => {
+            // Alternate background colors for better visual separation
+            const bgColor = index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-50';
+            // Format date for display
+            const formattedDate = formatDateCompact(expense.date);
+
             expensesList.innerHTML += `
-                <div class="p-3 bg-gray-50 rounded-md">
+                <div class="p-2 ${bgColor} rounded-md hover:bg-gray-200 transition-colors border border-gray-200 shadow-sm">
                     <div class="flex justify-between items-center">
                         <div>
-                            <p class="font-semibold">${expense.description}</p>
-                            <p class="text-sm text-gray-600">${expense.category}</p>
-                            <p class="text-xs text-gray-500">${expense.date}</p>
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs text-gray-500">${formattedDate}</span>
+                            </div>
+                            <p class="font-semibold text-[#005a00]">${expense.category}</p>
+                            <p class="text-xs text-gray-600">${expense.description}</p>
                         </div>
-                        <div class="flex items-center gap-3">
-                            <p class="font-bold">$${expense.amount.toFixed(2)}</p>
+                        <div class="flex items-center gap-2">
+                            <p class="font-bold text-[#005a00]">$${expense.amount.toFixed(2)}</p>
                             <button onclick="deleteExpense('${expense.id}')" 
-                                class="bg-red-500 text-white p-2 rounded-md hover:bg-red-600 transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                class="bg-red-500 text-white p-1.5 rounded-md hover:bg-red-600 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                 </svg>
                             </button>
@@ -156,7 +189,7 @@ async function loadExpenses() {
         document.getElementById('monthlyTotal').textContent = `Total: $${monthlyTotal.toFixed(2)}`;
 
         // After loading expenses and before displaying them
-        if (!window.categoryChart) {
+        if (!window.trendChart) {
             initializeCharts();
         }
         updateCharts(expenses);
@@ -167,13 +200,42 @@ async function loadExpenses() {
     }
 }
 
-// Format currency input (optional enhancement)
+// Validate and format the amount input
 document.getElementById("expenseAmount").addEventListener("input", function (e) {
+    // Only allow digits and a single decimal point
     let value = e.target.value;
+    let newValue = value.replace(/[^\d.]/g, ''); // Remove non-digits and non-decimal points
+
+    // Ensure only one decimal point
+    const decimalPoints = newValue.match(/\./g) || [];
+    if (decimalPoints.length > 1) {
+        newValue = newValue.substring(0, newValue.lastIndexOf('.'));
+    }
+
+    // Don't allow more than 2 decimal places
+    if (newValue.includes('.')) {
+        const parts = newValue.split('.');
+        if (parts[1].length > 2) {
+            newValue = parts[0] + '.' + parts[1].substring(0, 2);
+        }
+    }
+
+    // Update the input value if it changed
+    if (value !== newValue) {
+        e.target.value = newValue;
+    }
+});
+
+document.getElementById("expenseAmount").addEventListener("change", function (e) {
+    // Format to 2 decimal places when the field loses focus
+    let value = e.target.value.trim();
     if (value !== "") {
-        value = parseFloat(value);
-        if (!isNaN(value)) {
-            e.target.value = value.toFixed(2);
+        const numValue = parseFloat(value);
+        if (!isNaN(numValue)) {
+            e.target.value = numValue.toFixed(2);
+        } else {
+            // Clear invalid input
+            e.target.value = "";
         }
     }
 });
@@ -184,6 +246,59 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('expenseDate').value = today;
 });
 
+// Create a custom confirmation dialog
+function showDeleteConfirmation(expenseId) {
+    // Check if a confirmation dialog already exists and remove it
+    const existingConfirm = document.getElementById('custom-confirm-dialog');
+    if (existingConfirm) {
+        existingConfirm.remove();
+    }
+
+    // Create the confirmation dialog
+    const confirmDialog = document.createElement('div');
+    confirmDialog.id = 'custom-confirm-dialog';
+    confirmDialog.className = 'fixed inset-0 flex items-center justify-center z-50';
+    confirmDialog.innerHTML = `
+        <div class="fixed inset-0 bg-black bg-opacity-50"></div>
+        <div class="bg-white rounded-lg shadow-lg p-6 w-80 relative z-10 border-2 border-[#005a00]">
+            <h3 class="text-lg font-bold text-[#005a00] mb-4">Delete Expense</h3>
+            <p class="mb-6 text-gray-700">Are you sure you want to delete this expense?</p>
+            <div class="flex justify-end space-x-3">
+                <button id="cancel-delete" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
+                    Cancel
+                </button>
+                <button id="confirm-delete" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+                    Delete
+                </button>
+            </div>
+        </div>
+    `;
+
+    // Add to body
+    document.body.appendChild(confirmDialog);
+
+    // Add event listeners
+    document.getElementById('cancel-delete').addEventListener('click', () => {
+        confirmDialog.remove();
+    });
+
+    document.getElementById('confirm-delete').addEventListener('click', async () => {
+        confirmDialog.remove();
+        try {
+            await db.collection('expenses').doc(expenseId).delete();
+            loadExpenses(); // Refresh the expenses list
+        } catch (error) {
+            console.error('Error deleting expense:', error);
+            alert('Error deleting expense: ' + error.message);
+        }
+    });
+
+    // Also close on backdrop click
+    confirmDialog.querySelector('.fixed.inset-0.bg-black').addEventListener('click', () => {
+        confirmDialog.remove();
+    });
+}
+
 // Expense deletion
 async function deleteExpense(expenseId) {
     try {
@@ -193,20 +308,12 @@ async function deleteExpense(expenseId) {
             return;
         }
 
-        // Confirm before deleting
-        if (!confirm('Are you sure you want to delete this expense?')) {
-            return;
-        }
-
-        // Delete from Firestore
-        await db.collection('expenses').doc(expenseId).delete();
-
-        // Refresh the expenses list
-        loadExpenses();
+        // Show custom confirmation dialog instead of browser confirm
+        showDeleteConfirmation(expenseId);
 
     } catch (error) {
-        console.error('Error deleting expense:', error);
-        alert('Error deleting expense: ' + error.message);
+        console.error('Error in delete process:', error);
+        alert('Error processing delete: ' + error.message);
     }
 }
 
@@ -220,37 +327,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // Add these functions to create and update charts
-
 function initializeCharts() {
-    // Category Chart
-    const categoryCtx = document.getElementById('categoryChart').getContext('2d');
-    window.categoryChart = new Chart(categoryCtx, {
-        type: 'doughnut',
-        data: {
-            labels: [],
-            datasets: [{
-                data: [],
-                backgroundColor: [
-                    '#005a00',
-                    '#169416',
-                    '#2fa72f',
-                    '#47ba47',
-                    '#60cd60',
-                    '#66CDAA',
-                    '#556B2F'
-                ]
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
-            }
-        }
-    });
-
     // Trend Chart
     const trendCtx = document.getElementById('trendChart').getContext('2d');
     window.trendChart = new Chart(trendCtx, {
@@ -280,17 +357,6 @@ function initializeCharts() {
 }
 
 function updateCharts(expenses) {
-    // Process data for category chart
-    const categoryData = {};
-    expenses.forEach(expense => {
-        categoryData[expense.category] = (categoryData[expense.category] || 0) + expense.amount;
-    });
-
-    // Update category chart
-    window.categoryChart.data.labels = Object.keys(categoryData);
-    window.categoryChart.data.datasets[0].data = Object.values(categoryData);
-    window.categoryChart.update();
-
     // Process data for trend chart
     const dailyData = {};
     expenses.forEach(expense => {
