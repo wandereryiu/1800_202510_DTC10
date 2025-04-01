@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         <p class="text-xl font-bold text-[#005a00]">${goal.category || "N/A"}</p>
                         <p class="text-lg text-[#005a00]">$${goal.amount || "0.00"}</p>
                     </div>
-                    <a href="#" class="text-[#005a00] dark:text-[#005a00] hover:underline text-m inline-flex items-center font-extrabold">View Details
+                    <a href="eachgoal.html" class="text-[#005a00] dark:text-[#005a00] hover:underline text-sm inline-flex items-center font-extrabold">View Details
                         <svg class="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
                         </svg>
