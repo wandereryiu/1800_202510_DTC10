@@ -1,85 +1,80 @@
-let currentUser;
+document.addEventListener("DOMContentLoaded", function () {
+    const saveBtn = document.getElementById("save-btn");
+    const categoryInput = document.getElementById("large-input");
+    const amountInput = document.getElementById("expenseAmount");
 
-// Wait for authentication once
-firebase.auth().onAuthStateChanged(async function (user) {
-    if (user) {
-        currentUser = user;
-        setTimeout(loadGoals, 500); // Wait before loading
-    } else {
-        console.log("No user is signed in");
-        setTimeout(() => {
-            window.location.href = 'login.html';
-        }, 1000);
-    }
-});
+    const auth = firebase.auth();
+    const db = firebase.firestore();
 
-$(document).ready(function () {
-    $("#save-btn").on("click", async function (event) {
-        event.preventDefault();
+    // Function to save a goal
+    function saveGoal(userId) {
+        const category = categoryInput.value.trim();
+        const amount = parseFloat(amountInput.value);
 
-        const category = $("#large-input").val().trim();
-        const goal = $("#expenseAmount").val().trim();
-        const startDate = $("#datepicker-range-start").val().trim();
-        const endDate = $("#datepicker-range-end").val().trim();
-
-        if (!category || !goal || !startDate || !endDate) {
-            alert("Please fill in all fields");
+        if (!category || isNaN(amount) || amount <= 0) {
+            alert("Please enter a valid category and amount.");
             return;
         }
 
-        if (!currentUser) {
-            alert("Please log in to save your goal.");
-            return;
-        }
-
-        try {
-            await db.collection("users").doc(currentUser.uid).collection("goals").add({
-                category,
-                goal,
-                startDate,
-                endDate,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            });
-
+        db.collection("users").doc(userId).collection("goals").add({
+            category: category,
+            amount: amount,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        })
+        .then(() => {
             alert("Goal saved successfully!");
-            $("#large-input, #expenseAmount, #datepicker-range-start, #datepicker-range-end").val("");
-            
-            await new Promise(resolve => setTimeout(resolve, 500)); // Ensure Firestore writes first
-            loadGoals();
-        } catch (error) {
+            categoryInput.value = "";
+            amountInput.value = "";
+            loadGoals(userId);  // Reload the goals list after saving
+        })
+        .catch((error) => {
             console.error("Error saving goal: ", error);
+            alert("Failed to save goal. Try again.");
+        });
+    }
+
+    // Function to load goals
+    function loadGoals(userId) {
+        const goalsList = document.getElementById("goalslist");
+        db.collection("users").doc(userId).collection("goals").orderBy("timestamp", "desc").get()
+        .then((querySnapshot) => {
+            goalsList.innerHTML = ""; // Clear existing content
+            querySnapshot.forEach((doc) => {
+                const goal = doc.data();
+                
+                const goalItem = document.createElement("div");
+                goalItem.classList.add("p-3", "bg-[#f2f2f2]", "rounded-md", "shadow-md", "cursor-pointer", "hover:bg-[#b5e3b3]", "flex", "justify-between", "items-center");
+
+                goalItem.innerHTML = `
+                    <div>
+                        <p class="text-xl font-bold text-[#005a00]">${goal.category || "N/A"}</p>
+                        <p class="text-lg text-[#005a00]">$${goal.amount || "0.00"}</p>
+                    </div>
+                    <a href="#" class="text-[#005a00] dark:text-[#005a00] hover:underline text-m inline-flex items-center font-extrabold">View Details
+                        <svg class="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
+                        </svg>
+                    </a>
+                `;
+                
+                goalsList.appendChild(goalItem);
+            });
+        })
+        .catch((error) => {
+            console.error("Error loading goals: ", error);
+        });
+    }
+
+    // Wait for authentication
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            loadGoals(user.uid);
+
+            saveBtn.addEventListener("click", function () {
+                saveGoal(user.uid);
+            });
+        } else {
+            console.log("No user signed in.");
         }
     });
-
-    function loadGoals() {
-        const tableBody = document.getElementById('table-body');
-
-        if (!currentUser) return;
-
-        db.collection("users").doc(currentUser.uid).collection("goals")
-            .orderBy("timestamp", "desc")
-            .onSnapshot((snapshot) => {
-                if (snapshot.empty) {
-                    tableBody.innerHTML = "<tr><td colspan='4'>No goals found</td></tr>";
-                    return;
-                }
-
-                tableBody.innerHTML = ""; // Clear previous data
-
-                snapshot.forEach((doc) => {
-                    const data = doc.data();
-                    const row = `
-                        <tr class="hover:bg-[#005a00] dark:hover:bg-[#78e378] cursor-pointer rounded-full">
-                            <td class="font-medium text-gray-900 whitespace-nowrap dark:text-[#005a00]">${data.category}</td>
-                            <td>${data.startDate}</td>
-                            <td>${data.endDate}</td>
-                            <td>${data.growth ? data.growth + "%" : "N/A"}</td>
-                        </tr>
-                    `;
-                    tableBody.insertAdjacentHTML('beforeend', row);
-                });
-            }, (error) => {
-                console.error("Error fetching data: ", error);
-            });
-    }
 });
