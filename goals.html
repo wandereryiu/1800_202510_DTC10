@@ -69,35 +69,37 @@
                         required>
                 </div>
 
-                <label class="block mb-2 text-lg font-medium text-gray-900 dark:text-[#005a00]">
+                <label class="block mb-2 text-lg font-medium text-gray-900 text-center dark:text-[#005a00]">
                     Input Start Date and End Date
                 </label>
 
                 <div id="date-range-picker" date-rangepicker class="flex items-center">
+                
                     <div class="relative">
                         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                            
+                            <svg class="w-4 h-4 text-gray-500 dark:text-[#005a00]" aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                 <path
                                     d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
                             </svg>
                         </div>
                         <input id="datepicker-range-start" name="start" type="text"
-                            class="bg-white border border-[#005a00] text-[#005a00] text-sm rounded-lg focus:ring-[#005a00] focus:border-[#005a00] block w-full ps-10 p-2.5 dark:bg-[#b5e3b3] dark:border-[#005a00] dark:placeholder-black dark:text-[#005a00] dark:focus:ring-blue-500 dark:focus:border-[#005a00]"
-                            placeholder="Select date start">
+                            class="bg-white border border-[#005a00] text-[#005a00] text-sm rounded-lg focus:ring-[#005a00] focus:border-[#005a00] block w-full ps-10 p-2.5 dark:bg-[white] dark:border-[#005a00] dark:placeholder-[#005a00] dark:text-[#005a00] dark:focus:ring-blue-500 dark:focus:border-[#005a00] font-semibold"
+                            placeholder="Start Date">
                     </div>
-                    <span class="mx-4 text-gray-500">to</span>
+                    <span class="mx-4 text-[#005a00]">To</span>
                     <div class="relative">
                         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                            <svg class="w-4 h-4 text-gray-500 dark:text-[#005a00]" aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                 <path
                                     d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
                             </svg>
                         </div>
-                        <input id="datepicker-range-end" name="end" type="text"
-                            class="bg-white border border-[#005a00] text-[#005a00] text-sm rounded-lg focus:ring-[#005a00] focus:border-[#005a00] block w-full ps-10 p-2.5 dark:bg-[#b5e3b3] dark:border-[#005a00] dark:placeholder-black dark:text-[#005a00] dark:focus:ring-blue-500 dark:focus:border-[#005a00]"
-                            placeholder="Select date end">
+                        <input id="datepicker-range-start" name="start" type="text"
+                        class="bg-white border border-[#005a00] text-[#005a00] text-sm rounded-lg focus:ring-[#005a00] focus:border-[#005a00] block w-full ps-10 p-2.5 dark:bg-[white] dark:border-[#005a00] dark:placeholder-[#005a00] dark:text-[#005a00] dark:focus:ring-blue-500 dark:focus:border-[#005a00] font-semibold"
+                        placeholder="End Date">
                     </div>
                 </div>
 
