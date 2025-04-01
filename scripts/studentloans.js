@@ -7,32 +7,121 @@ if (typeof db === 'undefined') {
 firebase.auth().onAuthStateChanged((user) => {
     if (user) {
         // User is signed in
-        loadLoanDetails();
+        loadAllLoans();
     } else {
         // User is signed out
         window.location.href = 'login.html';
     }
 });
 
+// Show custom confirmation dialog
+function showConfirmationDialog(message, title = 'Success') {
+    // Check if a confirmation dialog already exists and remove it
+    const existingConfirm = document.getElementById('custom-confirm-dialog');
+    if (existingConfirm) {
+        existingConfirm.remove();
+    }
+
+    // Create the confirmation dialog
+    const confirmDialog = document.createElement('div');
+    confirmDialog.id = 'custom-confirm-dialog';
+    confirmDialog.className = 'fixed inset-0 flex items-center justify-center z-50';
+    confirmDialog.innerHTML = `
+        <div class="fixed inset-0 bg-black bg-opacity-50"></div>
+        <div class="bg-white rounded-lg shadow-lg p-6 w-80 relative z-10 border-2 border-[#005a00]">
+            <h3 class="text-lg font-bold text-[#005a00] mb-4">${title}</h3>
+            <p class="mb-6 text-gray-700">${message}</p>
+            <div class="flex justify-end">
+                <button id="confirm-ok" class="px-4 py-2 bg-[#005a00] text-white rounded-lg hover:bg-[#169416] transition-colors">
+                    OK
+                </button>
+            </div>
+        </div>
+    `;
+
+    // Add to body
+    document.body.appendChild(confirmDialog);
+
+    // Add event listeners
+    document.getElementById('confirm-ok').addEventListener('click', () => {
+        confirmDialog.remove();
+    });
+
+    // Also close on backdrop click
+    confirmDialog.querySelector('.fixed.inset-0.bg-black').addEventListener('click', () => {
+        confirmDialog.remove();
+    });
+}
+
+// Show delete confirmation dialog
+function showDeleteConfirmation(message, onConfirm) {
+    // Check if a confirmation dialog already exists and remove it
+    const existingConfirm = document.getElementById('custom-confirm-dialog');
+    if (existingConfirm) {
+        existingConfirm.remove();
+    }
+
+    // Create the confirmation dialog
+    const confirmDialog = document.createElement('div');
+    confirmDialog.id = 'custom-confirm-dialog';
+    confirmDialog.className = 'fixed inset-0 flex items-center justify-center z-50';
+    confirmDialog.innerHTML = `
+        <div class="fixed inset-0 bg-black bg-opacity-50"></div>
+        <div class="bg-white rounded-lg shadow-lg p-6 w-80 relative z-10 border-2 border-[#005a00]">
+            <h3 class="text-lg font-bold text-[#005a00] mb-4">Delete Confirmation</h3>
+            <p class="mb-6 text-gray-700">${message}</p>
+            <div class="flex justify-end space-x-3">
+                <button id="cancel-delete" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
+                    Cancel
+                </button>
+                <button id="confirm-delete" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+                    Delete
+                </button>
+            </div>
+        </div>
+    `;
+
+    // Add to body
+    document.body.appendChild(confirmDialog);
+
+    // Add event listeners
+    document.getElementById('cancel-delete').addEventListener('click', () => {
+        confirmDialog.remove();
+    });
+
+    document.getElementById('confirm-delete').addEventListener('click', () => {
+        confirmDialog.remove();
+        onConfirm();
+    });
+
+    // Also close on backdrop click
+    confirmDialog.querySelector('.fixed.inset-0.bg-black').addEventListener('click', () => {
+        confirmDialog.remove();
+    });
+}
+
 function saveLoanDetails() {
     const user = firebase.auth().currentUser;
     if (!user) {
-        alert('Please log in to save loan details');
+        showConfirmationDialog('Please log in to save loan details', 'Error');
         window.location.href = 'login.html';
         return;
     }
 
+    const title = document.getElementById('loanTitle').value;
     const startingAmount = document.getElementById('startingAmount').value;
     const interestRate = document.getElementById('interestRate').value;
     const monthlyPayment = document.getElementById('monthlyPayment').value;
 
-    if (!startingAmount || !interestRate || !monthlyPayment) {
-        alert('Please fill in all fields');
+    if (!title || !startingAmount || !interestRate || !monthlyPayment) {
+        showConfirmationDialog('Please fill in all fields', 'Error');
         return;
     }
 
     // Save to Firestore in studentLoans collection
-    db.collection('studentLoans').doc(user.uid).set({
+    const loanRef = db.collection('studentLoans').doc(user.uid).collection('loans').doc();
+    loanRef.set({
+        title: title,
         startingAmount: parseFloat(startingAmount),
         interestRate: parseFloat(interestRate),
         monthlyPayment: parseFloat(monthlyPayment),
@@ -40,29 +129,43 @@ function saveLoanDetails() {
         remainingAmount: parseFloat(startingAmount),
         totalInterestPaid: 0
     }).then(() => {
-        alert('Loan details saved successfully!');
-        updateStatus();
-        loadPaymentHistory();
+        // Clear the form
+        document.getElementById('loanTitle').value = '';
+        document.getElementById('startingAmount').value = '';
+        document.getElementById('interestRate').value = '';
+        document.getElementById('monthlyPayment').value = '';
+
+        // Show success message
+        showConfirmationDialog('Loan details saved successfully!', 'Success');
+
+        // Refresh the loan dropdown and select the new loan
+        loadAllLoans().then(() => {
+            const loanSelect = document.getElementById('selectedLoan');
+            loanSelect.value = loanRef.id;
+            updateStatus(loanRef.id);
+            loadPaymentHistory(loanRef.id);
+        });
     }).catch((error) => {
         console.error('Error saving loan details: ', error);
-        alert('Error saving loan details. Please try again.');
+        showConfirmationDialog('Error saving loan details. Please try again.', 'Error');
     });
 }
 
 // Load details from Firestore
-function loadLoanDetails() {
+function loadLoanDetails(loanId) {
     const user = firebase.auth().currentUser;
     if (!user) return;
 
-    db.collection('studentLoans').doc(user.uid).get()
+    db.collection('studentLoans').doc(user.uid).collection('loans').doc(loanId).get()
         .then((doc) => {
             if (doc && doc.data()) {
                 const data = doc.data();
+                document.getElementById('loanTitle').value = data.title || '';
                 document.getElementById('startingAmount').value = data.startingAmount || '';
                 document.getElementById('interestRate').value = data.interestRate || '';
                 document.getElementById('monthlyPayment').value = data.monthlyPayment || '';
-                updateStatus();
-                loadPaymentHistory();
+                updateStatus(loanId);
+                loadPaymentHistory(loanId);
             }
         }).catch((error) => {
             console.error('Error loading loan details: ', error);
@@ -73,76 +176,193 @@ function loadLoanDetails() {
 function recordPayment() {
     const user = firebase.auth().currentUser;
     if (!user) {
-        alert('Please log in to record a payment');
+        showConfirmationDialog('Please log in to record a payment', 'Error');
         window.location.href = 'login.html';
+        return;
+    }
+
+    const selectedLoanId = document.getElementById('selectedLoan').value;
+    if (!selectedLoanId) {
+        showConfirmationDialog('Please select a loan first', 'Error');
         return;
     }
 
     const paymentAmount = parseFloat(document.getElementById('paymentAmount').value);
     if (!paymentAmount || paymentAmount <= 0) {
-        alert('Please enter a valid payment amount');
+        showConfirmationDialog('Please enter a valid payment amount', 'Error');
         return;
     }
 
     // Get current loan details
-    db.collection('studentLoans').doc(user.uid).get()
-        .then((doc) => {
-            if (!doc || !doc.data()) {
-                alert('Please save loan details first');
-                return;
+    const loanRef = db.collection('studentLoans').doc(user.uid).collection('loans').doc(selectedLoanId);
+
+    // Start a transaction to ensure data consistency
+    return db.runTransaction((transaction) => {
+        return transaction.get(loanRef).then((doc) => {
+            if (!doc.exists) {
+                throw "Loan does not exist!";
             }
 
             const loanData = doc.data();
-            const remainingAmount = loanData.remainingAmount - paymentAmount;
-            const newTotalInterestPaid = loanData.totalInterestPaid + (loanData.remainingAmount * (loanData.interestRate / 100 / 12));
 
-            // Update loan details
-            db.collection('studentLoans').doc(user.uid).update({
-                remainingAmount: remainingAmount,
+            // Calculate new values
+            const monthlyInterest = (loanData.remainingAmount * (loanData.interestRate / 100 / 12));
+            const newRemainingAmount = loanData.remainingAmount - paymentAmount;
+            const newTotalInterestPaid = loanData.totalInterestPaid + monthlyInterest;
+
+            // Update the loan document
+            transaction.update(loanRef, {
+                remainingAmount: newRemainingAmount,
                 totalInterestPaid: newTotalInterestPaid
             });
 
-            // Add payment to history
-            return db.collection('studentLoans').doc(user.uid)
-                .collection('payments').add({
-                    amount: paymentAmount,
-                    date: new Date(),
-                    remainingBalance: remainingAmount
-                });
-        })
-        .then(() => {
+            // Add the payment to history
+            const paymentRef = loanRef.collection('payments').doc();
+            transaction.set(paymentRef, {
+                amount: paymentAmount,
+                date: new Date(),
+                remainingBalance: newRemainingAmount,
+                interestPaid: monthlyInterest
+            });
+
+            return {
+                newRemainingAmount,
+                newTotalInterestPaid
+            };
+        });
+    })
+        .then((result) => {
             document.getElementById('paymentAmount').value = '';
-            updateStatus();
-            loadPaymentHistory();
-            alert('Payment recorded successfully!');
+            updateStatus(selectedLoanId);
+            loadPaymentHistory(selectedLoanId);
+            showConfirmationDialog('Payment recorded successfully!', 'Success');
         })
         .catch((error) => {
             console.error('Error recording payment: ', error);
-            alert('Error recording payment. Please try again.');
+            showConfirmationDialog('Error recording payment. Please try again.', 'Error');
         });
 }
 
+// Delete a payment
+async function deletePayment(loanId, paymentId) {
+    const user = firebase.auth().currentUser;
+    if (!user) {
+        showConfirmationDialog('Please log in first', 'Error');
+        return;
+    }
+
+    showDeleteConfirmation('Are you sure you want to delete this payment?', async () => {
+        try {
+            const loanRef = db.collection('studentLoans').doc(user.uid).collection('loans').doc(loanId);
+
+            // Get the payment details first
+            const paymentDoc = await loanRef.collection('payments').doc(paymentId).get();
+            const paymentData = paymentDoc.data();
+
+            // Start a transaction to update both the payment collection and loan document
+            await db.runTransaction(async (transaction) => {
+                const loanDoc = await transaction.get(loanRef);
+                const loanData = loanDoc.data();
+
+                // Update the loan's remaining amount and total interest paid
+                transaction.update(loanRef, {
+                    remainingAmount: loanData.remainingAmount + paymentData.amount,
+                    totalInterestPaid: loanData.totalInterestPaid - paymentData.interestPaid
+                });
+
+                // Delete the payment
+                transaction.delete(loanRef.collection('payments').doc(paymentId));
+            });
+
+            // Refresh the display
+            updateStatus(loanId);
+            loadPaymentHistory(loanId);
+            showConfirmationDialog('Payment deleted successfully!', 'Success');
+        } catch (error) {
+            console.error('Error deleting payment:', error);
+            showConfirmationDialog('Error deleting payment. Please try again.', 'Error');
+        }
+    });
+}
+
+// Delete a loan
+async function deleteLoan(loanId) {
+    const user = firebase.auth().currentUser;
+    if (!user) {
+        showConfirmationDialog('Please log in first', 'Error');
+        return;
+    }
+
+    showDeleteConfirmation('Are you sure you want to delete this loan? This will delete all payment history associated with this loan.', async () => {
+        try {
+            const loanRef = db.collection('studentLoans').doc(user.uid).collection('loans').doc(loanId);
+
+            // Delete all payments first
+            const paymentsSnapshot = await loanRef.collection('payments').get();
+            const batch = db.batch();
+            paymentsSnapshot.docs.forEach((doc) => {
+                batch.delete(doc.ref);
+            });
+            await batch.commit();
+
+            // Delete the loan document
+            await loanRef.delete();
+
+            // Clear the form and refresh the display
+            document.getElementById('loanTitle').value = '';
+            document.getElementById('startingAmount').value = '';
+            document.getElementById('interestRate').value = '';
+            document.getElementById('monthlyPayment').value = '';
+
+            // Refresh loans dropdown
+            loadAllLoans();
+
+            // Clear payment history
+            document.getElementById('payment-log').innerHTML = '';
+
+            showConfirmationDialog('Loan deleted successfully!', 'Success');
+        } catch (error) {
+            console.error('Error deleting loan:', error);
+            showConfirmationDialog('Error deleting loan. Please try again.', 'Error');
+        }
+    });
+}
+
 // Load payment history
-function loadPaymentHistory() {
+function loadPaymentHistory(loanId) {
     const user = firebase.auth().currentUser;
     if (!user) return;
 
+    // Clear existing payment history first
     const paymentLog = document.getElementById('payment-log');
+    paymentLog.innerHTML = '';
+
+    // Create the header structure
     paymentLog.innerHTML = `
         <div class="space-y-2">
-            <div class="grid grid-cols-3 gap-2 md:gap-4 text-xs md:text-sm font-medium border-b-2 border-[#005a00] pb-1 md:pb-2">
+            <div class="grid grid-cols-4 gap-2 md:gap-4 text-xs md:text-sm font-medium border-b-2 border-[#005a00] pb-1 md:pb-2">
                 <div class="text-left">Date</div>
                 <div class="text-right">Payment</div>
                 <div class="text-right">Balance</div>
+                <div class="text-right">Action</div>
             </div>
             <div id="payment-rows" class="space-y-2"></div>
         </div>
     `;
 
+    // Get the payment rows container
+    const paymentRows = document.getElementById('payment-rows');
+    paymentRows.innerHTML = ''; // Ensure it's empty
+
     db.collection('studentLoans').doc(user.uid)
+        .collection('loans').doc(loanId)
         .collection('payments').orderBy('date', 'desc').get()
         .then((snapshot) => {
-            const paymentRows = document.getElementById('payment-rows');
+            if (snapshot.empty) {
+                paymentRows.innerHTML = '<div class="text-center text-gray-500">No payments recorded yet</div>';
+                return;
+            }
+
             snapshot.forEach((doc) => {
                 const payment = doc.data();
                 const date = payment.date.toDate().toLocaleDateString();
@@ -150,26 +370,36 @@ function loadPaymentHistory() {
                 const balance = payment.remainingBalance.toFixed(2);
 
                 const paymentRow = document.createElement('div');
-                paymentRow.className = 'grid grid-cols-3 gap-2 md:gap-4 text-xs md:text-sm py-2 bg-gray-50 rounded-lg';
+                paymentRow.className = 'grid grid-cols-4 gap-2 md:gap-4 text-xs md:text-sm py-2 bg-gray-50 rounded-lg';
                 paymentRow.innerHTML = `
                     <div class="text-left truncate">${date}</div>
                     <div class="text-right">$${amount}</div>
                     <div class="text-right">$${balance}</div>
+                    <div class="text-right">
+                        <button onclick="deletePayment('${loanId}', '${doc.id}')" 
+                            class="bg-red-500 text-white p-1.5 rounded-md hover:bg-red-600 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </button>
+                    </div>
                 `;
                 paymentRows.appendChild(paymentRow);
             });
         })
         .catch((error) => {
-            console.error('Error loading payment history: ', error);
+            console.error('Error loading payment history:', error);
+            paymentRows.innerHTML = '<div class="text-center text-red-500">Error loading payment history</div>';
         });
 }
 
 // Update the Status section based on loan details
-function updateStatus() {
+function updateStatus(loanId) {
     const user = firebase.auth().currentUser;
     if (!user) return;
 
-    db.collection('studentLoans').doc(user.uid).get()
+    db.collection('studentLoans').doc(user.uid)
+        .collection('loans').doc(loanId).get()
         .then((doc) => {
             if (!doc || !doc.data()) return;
 
@@ -207,9 +437,78 @@ function updateStatus() {
         });
 }
 
+// Load all loans for the current user
+function loadAllLoans() {
+    const user = firebase.auth().currentUser;
+    if (!user) return Promise.reject('No user logged in');
+
+    const loanSelect = document.getElementById('selectedLoan');
+    const quickLoanSelect = document.getElementById('quickLoanSelect');
+    loanSelect.innerHTML = '<option value="">Select a loan</option>';
+    quickLoanSelect.innerHTML = '<option value="">Select a loan</option>';
+
+    return db.collection('studentLoans').doc(user.uid)
+        .collection('loans').get()
+        .then((snapshot) => {
+            snapshot.forEach((doc) => {
+                const loan = doc.data();
+                // Add to payment section selector
+                const option1 = document.createElement('option');
+                option1.value = doc.id;
+                option1.textContent = loan.title;
+                loanSelect.appendChild(option1);
+
+                // Add to quick selector
+                const option2 = document.createElement('option');
+                option2.value = doc.id;
+                option2.textContent = loan.title;
+                quickLoanSelect.appendChild(option2);
+            });
+        })
+        .catch((error) => {
+            console.error('Error loading loans: ', error);
+        });
+}
+
+// Function to sync loan selection
+function syncLoanSelectors(sourceId, targetId) {
+    const sourceSelect = document.getElementById(sourceId);
+    const targetSelect = document.getElementById(targetId);
+    targetSelect.value = sourceSelect.value;
+
+    // Trigger change event on the target
+    const event = new Event('change');
+    targetSelect.dispatchEvent(event);
+}
+
 // Event Listeners
 document.getElementById('saveLoanDetails').addEventListener('click', saveLoanDetails);
 document.getElementById('recordPayment').addEventListener('click', recordPayment);
 
+// Handle loan selection changes
+document.getElementById('selectedLoan').addEventListener('change', (e) => {
+    const deleteLoanBtn = document.getElementById('deleteLoanBtn');
+    if (e.target.value) {
+        loadLoanDetails(e.target.value);
+        deleteLoanBtn.disabled = false;
+        // Sync with quick selector
+        syncLoanSelectors('selectedLoan', 'quickLoanSelect');
+    } else {
+        deleteLoanBtn.disabled = true;
+        // Sync with quick selector
+        syncLoanSelectors('selectedLoan', 'quickLoanSelect');
+    }
+});
+
+// Handle quick loan selection changes
+document.getElementById('quickLoanSelect').addEventListener('change', (e) => {
+    // Sync with payment section selector
+    syncLoanSelectors('quickLoanSelect', 'selectedLoan');
+});
+
 // Load data when page loads
-window.addEventListener('load', loadLoanDetails);
+window.addEventListener('load', () => {
+    loadAllLoans();
+    // Disable delete loan button initially
+    document.getElementById('deleteLoanBtn').disabled = true;
+});
