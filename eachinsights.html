@@ -10,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- Firebase Libraries -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -42,19 +43,39 @@
     </div>
 
     <!-- Body -->
-
-    <!-- Footer -->
-    <footer id="footerPlaceholder" class="mt-auto"></footer>
-
-    <!-- JS functions -->
-    <script src="./scripts/firebaseAPI_dtcteam10.js"></script>
-    <script src="./scripts/authentication.js"></script>
-    <script src="./scripts/skeleton.js"></script>
-    <script src="./scripts/script.js"></script>
-    <script src="./scripts/spending.js"></script>
-    <script src="./scripts/insights.js"></script>
-    <script src="./scripts/eachinsights.js"></script>
+    <!-- Chart Container -->
+    <div class="flex justify-center items-center min-h-[400px]">
+        <canvas id="expensesChart" width="500" height="350"></canvas>
+    </div>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 50" class="w-full">
+        <path fill="transparent" stroke="#005a00" stroke-width="2"
+            d="M0 25 Q 50 0, 100 25 T 200 25 T 300 25 T 400 25 T 500 25" />
+    </svg>
     
+        <div class="text-center mt-3 mb-4">
+            <h class="text-center font-bold font-serif text-3xl text-[#005a00] mb-4 mt-3 "> <span
+                    id="category-name"></span>
+                Insights</h>
+        </div>
+        <div id="expenses-list" class="w-100 mx-auto space-y-2"></div>
+    
+
+</body>
+
+</html>
+
+<!-- Footer -->
+<footer id="footerPlaceholder" class="mt-auto"></footer>
+
+<!-- JS functions -->
+<script src="./scripts/firebaseAPI_dtcteam10.js"></script>
+<script src="./scripts/authentication.js"></script>
+<script src="./scripts/skeleton.js"></script>
+<script src="./scripts/script.js"></script>
+<script src="./scripts/spending.js"></script>
+<script src="./scripts/insights.js"></script>
+<script src="./scripts/eachinsights.js"></script>
+
 
 </body>
 
