@@ -106,6 +106,9 @@ function formatDateCompact(dateString) {
 
 // Function to load and display expenses
 async function loadExpenses() {
+    // Get the expenses list element once at the start of the function
+    const expensesList = document.getElementById('expensesList');
+
     try {
         if (!currentUser) return;
 
@@ -117,7 +120,6 @@ async function loadExpenses() {
             `Showing expenses from ${formatDate(startDate)} to ${formatDate(endDate)}`;
 
         // Show loading state
-        const expensesList = document.getElementById('expensesList');
         expensesList.innerHTML = '<p class="text-gray-500">Loading expenses...</p>';
 
         // Get expenses

@@ -20,14 +20,20 @@ function logout() {
 // Function to get the current user's display name
 function displayUserName() {
     firebase.auth().onAuthStateChanged(user => {
+        // Make sure the element exists before trying to set its innerHTML
+        const userNameElement = document.getElementById('userName');
+        if (!userNameElement) return;
+
         if (user) {
-            document.getElementById('userName').innerHTML = "Hello, " + user.displayName + "!";
+            userNameElement.innerHTML = "Hello, " + user.displayName + "!";
         } else {
-            document.getElementById('userName').innerHTML = "Hello, Guest!";
+            userNameElement.innerHTML = "Hello, Guest!";
         }
     });
 }
 
-// Call the function when the page loads
-displayUserName();
+// Wait for DOM to be fully loaded before calling displayUserName
+document.addEventListener('DOMContentLoaded', function () {
+    displayUserName();
+});
 
