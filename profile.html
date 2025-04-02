@@ -1,76 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <title>SimplSaving</title>
-    <meta name="Desciption" content="Financial tracking for students and graduated students who need help saving.">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <head>
+        <title>SimplSaving</title>
+        <meta name="Desciption" content="Financial tracking for students and graduated students who need help saving.">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
-    <!-- Firebase Libraries -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script>
-    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+        <!-- Firebase Libraries -->
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script>
+        <link type="text/css" rel="stylesheet"
+            href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
-    <!-- Custom Fonts and Styling -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playwrite+IT+Moderna:wght@100..400&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="./styles/style.css" />
+        <!-- Custom Fonts and Styling -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Playwrite+IT+Moderna:wght@100..400&display=swap"
+            rel="stylesheet">
+        <link rel="stylesheet" href="./styles/style.css" />
 
-</head>
+    </head>
 
-<body class="flex flex-col min-h-screen">
+    <body class="flex flex-col min-h-screen">
 
-    <!--Navigation Bar-->
-    <nav id="navbarPlaceholder"></nav>
+        <!--Navigation Bar-->
+        <nav id="navbarPlaceholder"></nav>
 
-    <!-- Body -->
+        <!-- Body -->
 
-    <body>
-        <div class="flex items-center justify-center bg-gray-100">
-            <div class="bg-white p-6 rounded-lg shadow-2xl w-96 flex flex-col items-center my-16">
-                <h2 class="text-xl font-bold text-center mb-4 text-[#005a00]">Profile</h2>
-                <form id="update-profile" class="space-y-4 w-full">
-                    <div class="flex flex-col items-center">
-                        <div class="w-30 h-30 overflow-hidden rounded-full">
-                            <img id="profile-img"
-                                src="https://apicms.thestar.com.my/uploads/images/2024/11/21/3028163.webp"
-                                class="object-cover w-full h-full" alt="Profile Picture">
+        <body>
+            <div class="flex items-center justify-center bg-gray-100">
+                <div class="bg-white p-6 rounded-lg shadow-2xl w-96 flex flex-col items-center my-16">
+                    <h2 class="text-xl font-bold text-center mb-4 text-[#005a00]">Profile</h2>
+                    <form id="update-profile" class="space-y-4 w-full">
+                        <div class="flex flex-col items-center">
+                            <div class="w-30 h-30 overflow-hidden rounded-full">
+                                <img id="profile-img"
+                                    src="https://apicms.thestar.com.my/uploads/images/2024/11/21/3028163.webp"
+                                    class="object-cover w-full h-full" alt="Profile Picture">
+                            </div>
+                            
                         </div>
-                        <!-- <input type="file" id="profile-picture" class="mt-2 block w-full text-sm text-gray-500"> -->
-                    </div>
-                    <div>
-                        <label class="block font-semibold text-[#005a00]">Name</label>
-                        <input type="text" id="name" class="w-full p-2 border rounded-lg" required>
-                    </div>
-                    <div>
-                        <label class="block font-semibold text-[#005a00]">New Password</label>
-                        <input type="password" id="password" class="w-full p-2 border rounded-lg">
-                    </div>
-                    <button type="submit"
-                        class="w-full bg-[#005a00] text-white py-2 rounded-lg hover:bg-[#169416]">Update</button>
-                </form>
+                        <div>
+                            <label class="block font-semibold text-[#005a00]">Name</label>
+                            <input type="text" id="name" class="w-full p-2 border rounded-lg" required>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-[#005a00]">New Password</label>
+                            <input type="password" id="password" class="w-full p-2 border rounded-lg">
+                        </div>
+                        <button type="submit"
+                            class="w-full bg-[#005a00] text-white py-2 rounded-lg hover:bg-[#169416]">Update</button>
+                    </form>
+                </div>
             </div>
-        </div>
+        </body>
+
+        <!-- Footer -->
+        <footer id="footerPlaceholder" class="mt-auto"></footer>
+
+        <!-- JS functions -->
+        <script src="./scripts/firebaseAPI_dtcteam10.js"></script>
+        <script src="./scripts/authentication.js"></script>
+        <script src="./scripts/skeleton.js"></script>
+        <script src="./scripts/navbar.js"></script>
+        <script src="./scripts/profile.js"></script>
+
     </body>
-
-    <!-- Footer -->
-    <footer id="footerPlaceholder" class="mt-auto"></footer>
-
-    <!-- JS functions -->
-    <script src="./scripts/firebaseAPI_dtcteam10.js"></script>
-    <script src="./scripts/authentication.js"></script>
-    <script src="./scripts/skeleton.js"></script>
-    <script src="./scripts/navbar.js"></script>
-    <script src="./scripts/profile.js"></script>
-
-</body>
 
 </html>
