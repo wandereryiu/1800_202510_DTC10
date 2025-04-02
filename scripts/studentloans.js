@@ -551,24 +551,33 @@ function loadAllLoans() {
 
     const loanSelect = document.getElementById('selectedLoan');
     const quickLoanSelect = document.getElementById('quickLoanSelect');
-    loanSelect.innerHTML = '<option value="">Select a loan</option>';
-    quickLoanSelect.innerHTML = '<option value="">Select a loan</option>';
+    const dropdownClasses = 'w-full p-2 border rounded-lg focus:ring-2 focus:ring-[#005a00] focus:border-[#005a00]';
+
+    // Apply identical styling to both dropdowns
+    loanSelect.className = dropdownClasses;
+    quickLoanSelect.className = dropdownClasses;
+
+    // Set identical default options
+    const defaultOption = '<option value="">Select a loan</option>';
+    loanSelect.innerHTML = defaultOption;
+    quickLoanSelect.innerHTML = defaultOption;
 
     return db.collection('studentLoans').doc(user.uid)
         .collection('loans').get()
         .then((snapshot) => {
             snapshot.forEach((doc) => {
                 const loan = doc.data();
-                // Add to payment section selector
+
+                // Create identical options for both dropdowns
                 const option1 = document.createElement('option');
                 option1.value = doc.id;
                 option1.textContent = loan.title;
-                loanSelect.appendChild(option1);
 
-                // Add to quick selector
                 const option2 = document.createElement('option');
                 option2.value = doc.id;
                 option2.textContent = loan.title;
+
+                loanSelect.appendChild(option1);
                 quickLoanSelect.appendChild(option2);
             });
         })
@@ -581,11 +590,11 @@ function loadAllLoans() {
 function syncLoanSelectors(sourceId, targetId) {
     const sourceSelect = document.getElementById(sourceId);
     const targetSelect = document.getElementById(targetId);
-    targetSelect.value = sourceSelect.value;
 
-    // Trigger change event on the target
-    const event = new Event('change');
-    targetSelect.dispatchEvent(event);
+    // Prevent infinite recursion by checking if values are already the same
+    if (targetSelect.value !== sourceSelect.value) {
+        targetSelect.value = sourceSelect.value;
+    }
 }
 
 // Event Listeners
@@ -598,17 +607,22 @@ document.getElementById('selectedLoan').addEventListener('change', (e) => {
     if (e.target.value) {
         loadLoanDetails(e.target.value);
         deleteLoanBtn.disabled = false;
-        // Sync with quick selector
-        syncLoanSelectors('selectedLoan', 'quickLoanSelect');
     } else {
         deleteLoanBtn.disabled = true;
-        // Sync with quick selector
-        syncLoanSelectors('selectedLoan', 'quickLoanSelect');
     }
+    // Sync with quick selector
+    syncLoanSelectors('selectedLoan', 'quickLoanSelect');
 });
 
 // Handle quick loan selection changes
 document.getElementById('quickLoanSelect').addEventListener('change', (e) => {
+    const deleteLoanBtn = document.getElementById('deleteLoanBtn');
+    if (e.target.value) {
+        loadLoanDetails(e.target.value);
+        deleteLoanBtn.disabled = false;
+    } else {
+        deleteLoanBtn.disabled = true;
+    }
     // Sync with payment section selector
     syncLoanSelectors('quickLoanSelect', 'selectedLoan');
 });
