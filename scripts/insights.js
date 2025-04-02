@@ -57,7 +57,17 @@ async function updateCategoryChart() {
             }
         });
 
-    } catch (error) {
-        console.error("Error fetching expenses:", error);
-    }
+        categories.forEach(category => {
+            // Get the corresponding element for each category
+            const displayTotalElem = document.getElementById(`displaytotal-${category}`);
+            if (displayTotalElem) {
+                const formattedAmount = categoryTotals[category].toFixed(2); // Format as currency
+                displayTotalElem.innerHTML = `$${formattedAmount}`; // Update the element with the formatted amount
+            }
+        });
+        
+        } catch (error) {
+        console.error("Error fetching expenses:", error); // Handle errors
+        }
 }
+
