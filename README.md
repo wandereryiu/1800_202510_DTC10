@@ -1,100 +1,136 @@
+# SimplSaving
 
-# Project Name
+##  Overview
 
-## Overview
-Summarize your project's purpose, problem solved, key features, user benefits, development context, and main technologies used.
+**SimplSaving** is a client-side JavaScript web application designed to help students and recent graduates build healthy financial habits by tracking expenses, setting savings goals, and managing student loans — all from one mobile-friendly experience.
 
-Example:
-
-This client-side JavaScript web application provides real-time weather updates for cities worldwide. It simplifies accessing weather information through an intuitive mobile-first interface, allowing users to input a city name and receive data on temperature, humidity, and conditions.
-
-Developed for the [Course Name] course, applying User-Centred Design practices, agile project management processes, integrating a weather API, and Firebase backend services.
+This project was developed for the **COMP1800** course at BCIT. It incorporates user-centered design principles and agile development methods. The app is built with tailwind CSS for responsive styling, chart.js for interactive insights, and firebase for backend services including authentication, firestore, and hosting.
 
 ---
 
-## Features
+##  Features
 
-Example:
-- Real-time weather updates for any city.
-- Responsive design for desktop and mobile.
-- Displays temperature, humidity, and weather conditions.
+- Track and categorize daily spending
+- Set and monitor multiple savings goals
+- Visual insights through dynamic charts
+- Manage student loans with interest calculations
+- Secure login and authentication using Firebase
+- Fully responsive layout for mobile and desktop
 
 ---
 
-## Technologies Used
+##  Technologies Used
 
-Example:
-- **Frontend**: HTML, CSS, JavaScript
-- **Backend**: Firebase for hosting
-- **Database**: Firestore
-- **API**: OpenWeatherMap API
+- **Frontend**: HTML, Tailwind CSS, JavaScript
+- **Backend Services**: Firebase Authentication, Firestore, Firebase Hosting
+- **Visualization**: Chart.js
+- **UI Assets**: Google Fonts, Lucide Icons
 
 ---
 
 ## Usage
 
-Example:
-1. Open your browser and visit `http://localhost:3000`.
-2. Enter the name of the city in the search bar and press enter.
-3. View the weather information displayed on the screen.
+1. Open the app in your browser.
+2. Create an account or log in using Firebase Authentication.
+3. Navigate through the main dashboard to:
+   - Log expenses in the **Spending** section
+   - Create and manage goals in the **Goals** section
+   - View personalized charts in the **Insights** section
+   - Track student loans in the **Student Loans** section
+4. Visit the **Profile** page to update personal information or change your password.
 
 ---
 
 ## Project Structure
 
-Example:
-```
-project-name/
+```plaintext
+1800_202510_DTC10/
 ├── src/
 │   ├── index.html
-│   ├── style.css
-│   ├── app.js
-│   └── components/
+│   ├── login.html
+│   ├── main.html
+│   ├── profile.html
+│   ├── spending.html
+│   ├── goals.html
+│   ├── eachgoal.html
+│   ├── insights.html
+│   ├── eachinsights.html
+│   ├── student_loans.html
+│   └── template.html
+│
+│   ├── styles/
+│   │   └── style.css
+│
+│   ├── scripts/
+│   │   ├── app.js
+│   │   ├── firebaseAPI_dtcteam10.js
+│   │   ├── authentication.js
+│   │   ├── skeleton.js
+│   │   ├── navbar.js
+│   │   ├── main.js
+│   │   ├── profile.js
+│   │   ├── spending.js
+│   │   ├── goals.js
+│   │   ├── eachgoal.js
+│   │   ├── insights.js
+│   │   ├── eachinsights.js
+│   │   └── studentloans.js
+│
+│   ├── components/
+│   │   ├── footer.html
+│   │   ├── nav_before_login.html
+│   │   └── nav_after_login.html
+│
+│   ├── images/
+│   │   ├── 3347971.png
+│   │   ├── logo.jpeg
+│   │   ├── saving.png
+│   │   └── welcomebannerpiggy.png
+│
 ├── package.json
+├── package-lock.json
 ├── README.md
 └── .gitignore
 ```
 
 ---
 
-## Contributors
+##  Contributors
 
-**Yi Yu Zhao**
-
-**Koko Onuwavbagbe**
-
-**Brandon Berge**
+- Yi Yu Zhao  
+- Koko Onuwavbagbe  
+- Brandon Berge  
 
 ---
 
-## Acknowledgments
+##  Acknowledgments
 
-Example:
-- Weather data sourced from [OpenWeatherMap](https://openweathermap.org/).
-- Code snippets for ___ algoirthm were adapted from resources such as [Stack Overflow](https://stackoverflow.com/) and [MDN Web Docs](https://developer.mozilla.org/).
-- Icons sourced from [FontAwesome](https://fontawesome.com/) and images from [Unsplash](https://unsplash.com/).
+- Firebase services for authentication and Firestore database: [firebase.google.com](https://firebase.google.com/)
+- Chart visualization powered by [Chart.js](https://www.chartjs.org/)
+- Tailwind CSS for styling: [tailwindcss.com](https://tailwindcss.com/)
+- Icons and UI inspiration from [Lucide](https://lucide.dev/) and [Heroicons](https://heroicons.com/)
+- Fonts via [Google Fonts](https://fonts.google.com/)
+- Code references and syntax support from [MDN Web Docs](https://developer.mozilla.org/) and [Stack Overflow](https://stackoverflow.com/)
 
 ---
 
-## Limitations and Future Work
+##  Limitations and Future Work
+
 ### Limitations
-
-Example:
-- Currently, the app only supports city-based weather searches.
-- Limited to basic weather parameters like temperature, humidity, and conditions.
-- The user interface can be further enhanced for accessibility.
+- Expense categories are currently fixed and not user-defined
+- Loan payoff logic assumes standard amortization only
+- Accessibility features (e.g., keyboard navigation, ARIA roles) are minimal
+- No offline support or caching for offline data entry
 
 ### Future Work
-
-Example: 
-- Add support for location-based weather detection using GPS.
-- Implement additional weather parameters like wind speed and UV index.
-- Create a dark mode for better usability in low-light conditions.
-- Integrate user accounts for saving favorite locations.
+- Allow users to create custom expense categories
+- Add predictive insights (e.g., estimated monthly totals)
+- Implement dark mode and enhanced accessibility features
+- Improve mobile performance and responsiveness
+- Introduce dashboards and widgets for personalization
 
 ---
 
-## License
+##  License
 
-Example:
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the **MIT License**. See the `LICENSE` file for full details.
