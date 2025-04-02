@@ -12,20 +12,24 @@ document.addEventListener("DOMContentLoaded", function () {
     const goalDetailsDiv = document.getElementById("goalDetails");
     const updateBtn = document.getElementById("updateGoal");
     const deleteBtn = document.getElementById("deleteGoal");
+    const depositInput = document.getElementById("DepositAmount");
+    const depositDateInput = document.getElementById("DepositData");
+    const recordDepositBtn = document.getElementById("recordDeposit");
+    const progressText = document.getElementById("progressPercentage");
+    const totalDepositText = document.getElementById("averageMonthlyPayment");
+    const depositLogDiv = document.getElementById("Deposit-log");
 
     function loadGoalDetails(userId) {
         db.collection("users").doc(userId).collection("goals").doc(goalId).get()
             .then((doc) => {
                 if (doc.exists) {
                     const goalData = doc.data();
-    
-                    // Populate input fields
+
                     categoryInput.value = goalData.category || "";
                     amountInput.value = goalData.amount || "";
                     startDateInput.value = goalData.startDate || "";
                     endDateInput.value = goalData.endDate || "";
-    
-                    // Display goal details
+
                     goalDetailsDiv.innerHTML = `
                         <div class="flex items-center justify-between w-full">
                             <p class="text-lg text-[#005a00]"><strong class="font-serif">Category:</strong> ${goalData.category}</p>
@@ -39,14 +43,16 @@ document.addEventListener("DOMContentLoaded", function () {
                         <p class="text-lg text-[#005a00]"><strong class="font-serif">Amount:</strong> $${goalData.amount}</p>
                         <p class="text-lg text-[#005a00]"><strong class="font-serif">Start Date:</strong> ${goalData.startDate}</p>
                         <p class="text-lg text-[#005a00]"><strong class="font-serif">End Date:</strong> ${goalData.endDate}</p>
-                        <p class="text-sm text-[#005a00]"><strong class="font-serif">Last Updated:</strong> 
-                        ${(goalData.timestamp && goalData.timestamp.toDate) ? goalData.timestamp.toDate().toLocaleString() : "N/A"}</p>
                     `;
-    
-                    // Wait for DOM update, then add event listener
-                    setTimeout(() => {
-                        document.getElementById("deleteGoal").addEventListener("click", () => deleteGoal(userId));
-                    }, 100);
+
+                    loadDeposits(userId, goalData.amount);
+
+                    // Attach event listener for the delete button here
+                    const deleteGoalBtn = document.getElementById("deleteGoal");
+                    deleteGoalBtn.addEventListener("click", () => deleteGoal(userId));
+
+                    // Attach event listeners for update button as well
+                    updateBtn.addEventListener("click", () => updateGoal(userId, goalData));
                 } else {
                     goalDetailsDiv.innerHTML = "<p class='text-red-500'>Goal not found.</p>";
                 }
@@ -54,26 +60,39 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch((error) => {
                 console.error("Error loading goal details:", error);
             });
-    }
-    
-    function updateGoal(userId) {
-        const updatedGoal = {
-            category: categoryInput.value.trim(),
-            amount: parseFloat(amountInput.value),
-            startDate: startDateInput.value,
-            endDate: endDateInput.value,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        };
 
-        if (!updatedGoal.category || isNaN(updatedGoal.amount) || updatedGoal.amount <= 0 || !updatedGoal.startDate || !updatedGoal.endDate) {
-            alert("Please enter valid details for all fields.");
+    }
+
+    function updateGoal(userId, goalData) {
+        const updatedCategory = categoryInput.value;
+        const updatedAmount = parseFloat(amountInput.value);
+        let updatedStartDate = startDateInput.value;
+        let updatedEndDate = endDateInput.value;
+
+        // If the startDate or endDate is not changed (empty input), keep the original date values
+        if (!updatedStartDate) {
+            updatedStartDate = goalData.startDate;  // Keep original startDate
+        }
+        if (!updatedEndDate) {
+            updatedEndDate = goalData.endDate;  // Keep original endDate
+        }
+
+        if (isNaN(updatedAmount) || updatedAmount <= 0) {
+            alert("Please enter a valid amount.");
             return;
         }
 
-        db.collection("users").doc(userId).collection("goals").doc(goalId).update(updatedGoal)
+        const updatedGoalData = {
+            category: updatedCategory,
+            amount: updatedAmount,
+            startDate: updatedStartDate,
+            endDate: updatedEndDate
+        };
+
+        db.collection("users").doc(userId).collection("goals").doc(goalId).update(updatedGoalData)
             .then(() => {
                 alert("Goal updated successfully!");
-                loadGoalDetails(userId);
+                loadGoalDetails(userId);  // Reload goal details after update
             })
             .catch((error) => {
                 console.error("Error updating goal:", error);
@@ -81,12 +100,15 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     }
 
+
+
+
     function deleteGoal(userId) {
         if (confirm("Are you sure you want to delete this goal?")) {
             db.collection("users").doc(userId).collection("goals").doc(goalId).delete()
                 .then(() => {
                     alert("Goal deleted successfully!");
-                    window.location.href = "goals.html"; // Redirect after deletion
+                    window.location.href = "/goals.html";  // Redirect to goals page
                 })
                 .catch((error) => {
                     console.error("Error deleting goal:", error);
@@ -95,12 +117,70 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    function recordDeposit(userId) {
+        const depositAmount = parseFloat(depositInput.value);
+        const depositDate = depositDateInput.value;
+
+        if (isNaN(depositAmount) || depositAmount <= 0 || !depositDate) {
+            alert("Please enter a valid deposit amount and date.");
+            return;
+        }
+
+        const depositData = {
+            amount: depositAmount,
+            date: depositDate,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        };
+
+        db.collection("users").doc(userId).collection("eachgoals").doc(goalId).collection("deposits").add(depositData)
+            .then(() => {
+                alert("Deposit recorded successfully!");
+                loadDeposits(userId, parseFloat(amountInput.value));
+            })
+            .catch((error) => {
+                console.error("Error recording deposit:", error);
+                alert("Failed to record deposit.");
+            });
+    }
+
+    function loadDeposits(userId, goalAmount) {
+        db.collection("users").doc(userId).collection("eachgoals").doc(goalId).collection("deposits")
+            .orderBy("timestamp", "asc")
+            .get()
+            .then((querySnapshot) => {
+                let totalDeposited = 0;
+                depositLogDiv.innerHTML = "";
+
+                querySnapshot.forEach((doc) => {
+                    const deposit = doc.data();
+                    totalDeposited += deposit.amount;
+
+                    depositLogDiv.innerHTML += `
+                        <div class="p-2 bg-gray-100 rounded-md shadow-md">
+                            <p class="text-m "><strong>Amount:</strong> $${deposit.amount.toFixed(2)}</p>
+                            <p class="text-m "><strong>Date:</strong> ${deposit.date}</p>
+                        </div>
+                    `;
+                });
+
+                // Calculate progress and remaining amount
+                const progress = ((totalDeposited / goalAmount) * 100).toFixed(2);
+                progressText.innerText = `${progress}%`;
+
+                // Calculate remaining amount to be deposited
+                const remainingAmount = goalAmount - totalDeposited;
+                totalDepositText.innerText = `$${remainingAmount.toFixed(2)}`;  // Show remaining amount to be deposited
+            })
+            .catch((error) => {
+                console.error("Error loading deposits:", error);
+            });
+    }
+
     auth.onAuthStateChanged((user) => {
         if (user) {
             loadGoalDetails(user.uid);
 
-            updateBtn.addEventListener("click", () => updateGoal(user.uid));
-            deleteBtn.addEventListener("click", () => deleteGoal(user.uid));
+            recordDepositBtn.addEventListener("click", () => recordDeposit(user.uid));
         } else {
             console.log("No user signed in.");
             goalDetailsDiv.innerHTML = "<p class='text-red-500'>You must be signed in to view goal details.</p>";
