@@ -21,7 +21,7 @@ expenseForm.addEventListener('submit', async function (e) {
     try {
         // Check authentication first
         if (!currentUser) {
-            alert('Please login first');
+            showConfirmationDialog('Please login first', 'Error');
             window.location.href = 'login.html';
             return;
         }
@@ -34,14 +34,14 @@ expenseForm.addEventListener('submit', async function (e) {
 
         // Enhanced validation
         if (!amountInput || !date || !category || !description) {
-            alert('Please fill in all fields');
+            showConfirmationDialog('Please fill in all fields', 'Error');
             return;
         }
 
         // Validate amount is a proper number
         const amount = parseFloat(amountInput);
         if (isNaN(amount) || amount <= 0) {
-            alert('Please enter a valid positive number for amount');
+            showConfirmationDialog('Please enter a valid positive number for amount', 'Error');
             return;
         }
 
@@ -58,10 +58,11 @@ expenseForm.addEventListener('submit', async function (e) {
         // Clear form
         expenseForm.reset();
         loadExpenses(); // Refresh the expenses list
+        showConfirmationDialog('Expense added successfully!', 'Success');
 
     } catch (error) {
         console.error('Error adding expense:', error);
-        alert('Error adding expense: ' + error.message);
+        showConfirmationDialog('Error adding expense: ' + error.message, 'Error');
     }
 });
 
@@ -377,4 +378,43 @@ function updateCharts(expenses) {
 document.addEventListener('DOMContentLoaded', function () {
     initializeCharts();
     // ... your existing DOMContentLoaded code ...
-}); 
+});
+
+// Show confirmation dialog
+function showConfirmationDialog(message, title = 'Success') {
+    // Check if a confirmation dialog already exists and remove it
+    const existingConfirm = document.getElementById('custom-confirm-dialog');
+    if (existingConfirm) {
+        existingConfirm.remove();
+    }
+
+    // Create the confirmation dialog
+    const confirmDialog = document.createElement('div');
+    confirmDialog.id = 'custom-confirm-dialog';
+    confirmDialog.className = 'fixed inset-0 flex items-center justify-center z-50';
+    confirmDialog.innerHTML = `
+        <div class="fixed inset-0 bg-black bg-opacity-50"></div>
+        <div class="bg-white rounded-lg shadow-lg p-6 w-80 relative z-10 border-2 border-[#005a00]">
+            <h3 class="text-lg font-bold text-[#005a00] mb-4">${title}</h3>
+            <p class="mb-6 text-gray-700">${message}</p>
+            <div class="flex justify-end">
+                <button id="confirm-ok" class="px-4 py-2 bg-[#005a00] text-white rounded-lg hover:bg-[#169416] transition-colors">
+                    OK
+                </button>
+            </div>
+        </div>
+    `;
+
+    // Add to body
+    document.body.appendChild(confirmDialog);
+
+    // Add event listeners
+    document.getElementById('confirm-ok').addEventListener('click', () => {
+        confirmDialog.remove();
+    });
+
+    // Also close on backdrop click
+    confirmDialog.querySelector('.fixed.inset-0.bg-black').addEventListener('click', () => {
+        confirmDialog.remove();
+    });
+} 
