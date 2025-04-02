@@ -247,14 +247,15 @@ function recordPayment() {
                 lastInterestDate: paymentStartOfDay
             });
 
-            // Add the payment to history
+            // Add the payment to history with server timestamp
             const paymentRef = loanRef.collection('payments').doc();
             transaction.set(paymentRef, {
                 amount: paymentAmount,
                 date: paymentStartOfDay,
                 remainingBalance: newRemainingAmount,
                 interestPaid: interestPayment,
-                principalPaid: principalPayment
+                principalPaid: principalPayment,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
             });
 
             return {
@@ -301,11 +302,23 @@ async function deletePayment(loanId, paymentId) {
                 const paymentData = paymentDoc.data();
 
                 // Get all payments for this loan
-                const paymentsSnapshot = await loanRef.collection('payments').orderBy('date', 'desc').get();
+                const paymentsSnapshot = await loanRef.collection('payments')
+                    .orderBy('date', 'desc')
+                    .get();
+
                 const payments = paymentsSnapshot.docs.map(doc => ({
                     id: doc.id,
-                    ...doc.data()
+                    ...doc.data(),
+                    dateObj: doc.data().date.toDate(),
+                    timestampObj: doc.data().timestamp?.toDate() || new Date(0)
                 }));
+
+                // Sort payments by date and timestamp
+                payments.sort((a, b) => {
+                    const dateCompare = b.dateObj - a.dateObj;
+                    if (dateCompare !== 0) return dateCompare;
+                    return b.timestampObj - a.timestampObj;
+                });
 
                 // Find the payment date that should become the new lastInterestDate
                 let newLastInterestDate = null;
@@ -320,9 +333,8 @@ async function deletePayment(loanId, paymentId) {
                     // Find the most recent payment before the one being deleted
                     for (const payment of payments) {
                         if (payment.id !== paymentId) {
-                            const paymentDate = payment.date.toDate();
-                            if (!newLastInterestDate || paymentDate > newLastInterestDate) {
-                                newLastInterestDate = paymentDate;
+                            if (!newLastInterestDate || payment.dateObj > newLastInterestDate) {
+                                newLastInterestDate = payment.dateObj;
                             }
                         }
                     }
@@ -423,18 +435,44 @@ function loadPaymentHistory(loanId) {
     const paymentRows = document.getElementById('payment-rows');
     paymentRows.innerHTML = ''; // Ensure it's empty
 
+    // Note: This query requires a composite index. Create it in the Firebase Console:
+    // Collection: payments
+    // Fields to index: date (Descending), timestamp (Descending), __name__ (Descending)
     db.collection('studentLoans').doc(user.uid)
         .collection('loans').doc(loanId)
-        .collection('payments').orderBy('date', 'desc').get()
+        .collection('payments')
+        .orderBy('date', 'desc')
+        .get()
         .then((snapshot) => {
             if (snapshot.empty) {
                 paymentRows.innerHTML = '<div class="text-center text-gray-500">No payments recorded yet</div>';
                 return;
             }
 
+            // Convert to array and sort by date and timestamp
+            const payments = [];
             snapshot.forEach((doc) => {
-                const payment = doc.data();
-                const date = payment.date.toDate().toLocaleDateString();
+                const data = doc.data();
+                payments.push({
+                    id: doc.id,
+                    ...data,
+                    dateObj: data.date.toDate(), // Convert to Date object for sorting
+                    timestampObj: data.timestamp?.toDate() || new Date(0) // Handle missing timestamp
+                });
+            });
+
+            // Sort by date and timestamp
+            payments.sort((a, b) => {
+                // First compare by date
+                const dateCompare = b.dateObj - a.dateObj;
+                if (dateCompare !== 0) return dateCompare;
+                // If same date, compare by timestamp
+                return b.timestampObj - a.timestampObj;
+            });
+
+            // Display sorted payments
+            payments.forEach((payment) => {
+                const date = payment.dateObj.toLocaleDateString();
                 const amount = payment.amount.toFixed(2);
                 const balance = payment.remainingBalance.toFixed(2);
 
@@ -445,7 +483,7 @@ function loadPaymentHistory(loanId) {
                     <div class="text-right">$${amount}</div>
                     <div class="text-right">$${balance}</div>
                     <div class="text-right">
-                        <button onclick="deletePayment('${loanId}', '${doc.id}')" 
+                        <button onclick="deletePayment('${loanId}', '${payment.id}')" 
                             class="bg-red-500 text-white p-1.5 rounded-md hover:bg-red-600 transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -458,7 +496,7 @@ function loadPaymentHistory(loanId) {
         })
         .catch((error) => {
             console.error('Error loading payment history:', error);
-            paymentRows.innerHTML = '<div class="text-center text-red-500">Error loading payment history</div>';
+            paymentRows.innerHTML = '<div class="text-center text-red-500">Error loading payment history. Please create the required index in Firebase Console.</div>';
         });
 }
 
