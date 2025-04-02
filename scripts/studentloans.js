@@ -118,6 +118,7 @@ function saveLoanDetails() {
         return;
     }
 
+    const now = new Date();
     // Save to Firestore in studentLoans collection
     const loanRef = db.collection('studentLoans').doc(user.uid).collection('loans').doc();
     loanRef.set({
@@ -125,7 +126,8 @@ function saveLoanDetails() {
         startingAmount: parseFloat(startingAmount),
         interestRate: parseFloat(interestRate),
         monthlyPayment: parseFloat(monthlyPayment),
-        startDate: new Date(),
+        startDate: now,
+        lastInterestDate: now,
         remainingAmount: parseFloat(startingAmount),
         totalInterestPaid: 0
     }).then(() => {
@@ -188,8 +190,16 @@ function recordPayment() {
     }
 
     const paymentAmount = parseFloat(document.getElementById('paymentAmount').value);
+    // Convert input date to start of day in local timezone
+    const paymentDate = new Date(document.getElementById('paymentDate').value + 'T00:00:00');
+
     if (!paymentAmount || paymentAmount <= 0) {
         showConfirmationDialog('Please enter a valid payment amount', 'Error');
+        return;
+    }
+
+    if (!paymentDate || isNaN(paymentDate.getTime())) {
+        showConfirmationDialog('Please enter a valid payment date', 'Error');
         return;
     }
 
@@ -204,25 +214,47 @@ function recordPayment() {
             }
 
             const loanData = doc.data();
+            const lastInterestDate = loanData.lastInterestDate.toDate();
 
-            // Calculate new values
-            const monthlyInterest = (loanData.remainingAmount * (loanData.interestRate / 100 / 12));
-            const newRemainingAmount = loanData.remainingAmount - paymentAmount;
-            const newTotalInterestPaid = loanData.totalInterestPaid + monthlyInterest;
+            // Convert both dates to start of day for comparison
+            const lastInterestStartOfDay = new Date(lastInterestDate.getFullYear(), lastInterestDate.getMonth(), lastInterestDate.getDate());
+            const paymentStartOfDay = new Date(paymentDate.getFullYear(), paymentDate.getMonth(), paymentDate.getDate());
+
+            // Calculate days between dates (will be 0 for same day)
+            const daysSinceLastInterest = Math.max(0, (paymentStartOfDay - lastInterestStartOfDay) / (1000 * 60 * 60 * 24));
+
+            // Calculate interest for the elapsed time
+            const dailyInterestRate = loanData.interestRate / 100 / 365;
+            const interestAccrued = loanData.remainingAmount * dailyInterestRate * daysSinceLastInterest;
+
+            // Calculate how much of the payment goes to interest vs principal
+            const interestPayment = Math.min(interestAccrued, paymentAmount);
+            const principalPayment = paymentAmount - interestPayment;
+
+            const newRemainingAmount = loanData.remainingAmount - principalPayment;
+            // Add the interest payment to the existing total interest paid
+            const newTotalInterestPaid = loanData.totalInterestPaid + interestPayment;
+
+            // Validate the payment date isn't before the last interest date
+            if (paymentStartOfDay < lastInterestStartOfDay) {
+                throw "Payment date cannot be before the last recorded payment date";
+            }
 
             // Update the loan document
             transaction.update(loanRef, {
                 remainingAmount: newRemainingAmount,
-                totalInterestPaid: newTotalInterestPaid
+                totalInterestPaid: newTotalInterestPaid,
+                lastInterestDate: paymentStartOfDay
             });
 
             // Add the payment to history
             const paymentRef = loanRef.collection('payments').doc();
             transaction.set(paymentRef, {
                 amount: paymentAmount,
-                date: new Date(),
+                date: paymentStartOfDay,
                 remainingBalance: newRemainingAmount,
-                interestPaid: monthlyInterest
+                interestPaid: interestPayment,
+                principalPaid: principalPayment
             });
 
             return {
@@ -233,13 +265,20 @@ function recordPayment() {
     })
         .then((result) => {
             document.getElementById('paymentAmount').value = '';
+            // Reset payment date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('paymentDate').value = today;
             updateStatus(selectedLoanId);
             loadPaymentHistory(selectedLoanId);
             showConfirmationDialog('Payment recorded successfully!', 'Success');
         })
         .catch((error) => {
             console.error('Error recording payment: ', error);
-            showConfirmationDialog('Error recording payment. Please try again.', 'Error');
+            let errorMessage = error;
+            if (error === "Payment date cannot be before the last recorded payment date") {
+                errorMessage = "Payment date must be on or after the last recorded payment date";
+            }
+            showConfirmationDialog(errorMessage, 'Error');
         });
 }
 
@@ -337,7 +376,7 @@ function loadPaymentHistory(loanId) {
     const paymentLog = document.getElementById('payment-log');
     paymentLog.innerHTML = '';
 
-    // Create the header structure
+    // Header for payment history
     paymentLog.innerHTML = `
         <div class="space-y-2">
             <div class="grid grid-cols-4 gap-2 md:gap-4 text-xs md:text-sm font-medium border-b-2 border-[#005a00] pb-1 md:pb-2">
@@ -511,4 +550,7 @@ window.addEventListener('load', () => {
     loadAllLoans();
     // Disable delete loan button initially
     document.getElementById('deleteLoanBtn').disabled = true;
+    // Set default payment date to today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('paymentDate').value = today;
 });
