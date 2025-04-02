@@ -7,7 +7,14 @@ if (typeof db === 'undefined') {
 firebase.auth().onAuthStateChanged((user) => {
     if (user) {
         // User is signed in
-        loadAllLoans();
+        loadAllLoans().then(() => {
+            // After loans are loaded, set up the page
+            // Disable delete loan button initially
+            document.getElementById('deleteLoanBtn').disabled = true;
+            // Set default payment date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('paymentDate').value = today;
+        });
     } else {
         // User is signed out
         window.location.href = 'login.html';
@@ -625,14 +632,4 @@ document.getElementById('quickLoanSelect').addEventListener('change', (e) => {
     }
     // Sync with payment section selector
     syncLoanSelectors('quickLoanSelect', 'selectedLoan');
-});
-
-// Load data when page loads
-window.addEventListener('load', () => {
-    loadAllLoans();
-    // Disable delete loan button initially
-    document.getElementById('deleteLoanBtn').disabled = true;
-    // Set default payment date to today
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('paymentDate').value = today;
 });
