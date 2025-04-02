@@ -11,7 +11,8 @@ function showConfirmationDialog(message, title = 'Success', shouldRefresh = fals
     confirmDialog.id = 'custom-confirm-dialog';
     confirmDialog.className = 'fixed inset-0 flex items-center justify-center z-50';
     confirmDialog.innerHTML = `
-        <div class="fixed inset-0 bg-black bg-opacity-50"></div>
+        <div class="fixed inset-0 bg-transparent"></div>
+
         <div class="bg-white rounded-lg shadow-lg p-6 w-80 relative z-10 border-2 border-[#005a00]">
             <h3 class="text-lg font-bold text-[#005a00] mb-4">${title}</h3>
             <p class="mb-6 text-gray-700">${message}</p>
@@ -34,10 +35,11 @@ function showConfirmationDialog(message, title = 'Success', shouldRefresh = fals
         }
     });
 
-    // Also close on backdrop click
-    confirmDialog.querySelector('.fixed.inset-0.bg-black').addEventListener('click', () => {
-        confirmDialog.remove();
-    });
+    // Ensure backdrop click closes the dialog safely
+    const backdrop = document.getElementById('dialog-backdrop');
+    if (backdrop) {
+        backdrop.addEventListener('click', () => confirmDialog.remove());
+    }
 }
 
 // Wait for authentication state to be ready
