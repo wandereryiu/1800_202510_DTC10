@@ -294,19 +294,49 @@ async function deletePayment(loanId, paymentId) {
         try {
             const loanRef = db.collection('studentLoans').doc(user.uid).collection('loans').doc(loanId);
 
-            // Get the payment details first
-            const paymentDoc = await loanRef.collection('payments').doc(paymentId).get();
-            const paymentData = paymentDoc.data();
-
-            // Start a transaction to update both the payment collection and loan document
+            // Start a transaction to ensure data consistency
             await db.runTransaction(async (transaction) => {
+                // Get the payment being deleted
+                const paymentDoc = await transaction.get(loanRef.collection('payments').doc(paymentId));
+                const paymentData = paymentDoc.data();
+
+                // Get all payments for this loan
+                const paymentsSnapshot = await loanRef.collection('payments').orderBy('date', 'desc').get();
+                const payments = paymentsSnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+
+                // Find the payment date that should become the new lastInterestDate
+                let newLastInterestDate = null;
+                const deletedPaymentDate = paymentData.date.toDate();
+
+                // If this was the only payment, revert to loan start date
+                if (payments.length === 1) {
+                    const loanDoc = await transaction.get(loanRef);
+                    const loanData = loanDoc.data();
+                    newLastInterestDate = loanData.startDate;
+                } else {
+                    // Find the most recent payment before the one being deleted
+                    for (const payment of payments) {
+                        if (payment.id !== paymentId) {
+                            const paymentDate = payment.date.toDate();
+                            if (!newLastInterestDate || paymentDate > newLastInterestDate) {
+                                newLastInterestDate = paymentDate;
+                            }
+                        }
+                    }
+                }
+
+                // Get the loan data
                 const loanDoc = await transaction.get(loanRef);
                 const loanData = loanDoc.data();
 
-                // Update the loan's remaining amount and total interest paid
+                // Update the loan document
                 transaction.update(loanRef, {
-                    remainingAmount: loanData.remainingAmount + paymentData.amount,
-                    totalInterestPaid: loanData.totalInterestPaid - paymentData.interestPaid
+                    remainingAmount: loanData.remainingAmount + paymentData.principalPaid,
+                    totalInterestPaid: loanData.totalInterestPaid - paymentData.interestPaid,
+                    lastInterestDate: newLastInterestDate
                 });
 
                 // Delete the payment
